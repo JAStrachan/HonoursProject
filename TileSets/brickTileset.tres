@@ -1,0 +1,55 @@
+[gd_resource type="TileSet" load_steps=4 format=2]
+
+[ext_resource path="res://TileSets/brickTileset.png" type="Texture" id=1]
+
+
+[sub_resource type="ConvexPolygonShape2D" id=1]
+
+custom_solver_bias = 0.0
+points = PoolVector2Array( -25, -25, 25, -25, 25, 25, -25, 25 )
+
+[sub_resource type="ConvexPolygonShape2D" id=2]
+
+custom_solver_bias = 0.0
+points = PoolVector2Array( 25, -25, 75, -25, 75, 25, 25, 25 )
+
+[resource]
+
+0/name = "Wall"
+0/texture = ExtResource( 1 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 0, 50, 50 )
+0/is_autotile = false
+0/occluder_offset = Vector2( 25, 25 )
+0/navigation_offset = Vector2( 25, 25 )
+0/shapes = [ {
+"autotile_coord": Vector2( 0, 0 ),
+"one_way": false,
+"shape": SubResource( 1 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 25, 25 )
+} ]
+1/name = "WallUp"
+1/texture = ExtResource( 1 )
+1/tex_offset = Vector2( 0, 0 )
+1/modulate = Color( 1, 1, 1, 1 )
+1/region = Rect2( 50, 0, 50, 50 )
+1/is_autotile = false
+1/occluder_offset = Vector2( 25, 25 )
+1/navigation_offset = Vector2( 25, 25 )
+1/shapes = [ {
+"autotile_coord": Vector2( 0, 0 ),
+"one_way": false,
+"shape": SubResource( 2 ),
+"shape_transform": Transform2D( 1, 0, 0, 1, 25, 25 )
+} ]
+2/name = "BG_Wall"
+2/texture = ExtResource( 1 )
+2/tex_offset = Vector2( 0, 0 )
+2/modulate = Color( 1, 1, 1, 1 )
+2/region = Rect2( 200, 0, 50, 50 )
+2/is_autotile = false
+2/occluder_offset = Vector2( 25, 25 )
+2/navigation_offset = Vector2( 25, 25 )
+2/shapes = [  ]
+
