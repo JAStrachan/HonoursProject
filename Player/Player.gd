@@ -8,7 +8,7 @@ export (float) var shoot_speed = 0.5
 var velocity = Vector2()
 var can_shoot = true
 
-var Bullet = preload("res://PlayerBullet.tscn")
+var Bullet = preload("res://Bullet/PlayerBullet.tscn")
 
 func _ready():
 	# Called when the node is added to the scene for the first time.
