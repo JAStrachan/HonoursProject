@@ -71,9 +71,10 @@ func shoot():
 			get_parent().add_child(bullet) #don't want bullet to move with me, so add it as child of parent
 			can_shoot = false
 			$time_since_last_shot.start()
-			
+		
+# if an enemy physically attacks a player (ie touches a player)
 func enemy_touch():
-	hit()
+	hit(enemy_physical_attack)
 	
 func heal(health_boost):
 	health = health + health_boost
@@ -81,13 +82,13 @@ func heal(health_boost):
 		health = max_health
 	emit_signal('health_changed', health)
 
-func hit():
-	if health - enemy_physical_attack <=0:
+func hit(damage):
+	if health - damage <=0:
 		emit_signal("death")
 		emit_signal('health_changed', 0)
 		death()
 	else:
-		health = health - enemy_physical_attack
+		health = health - damage
 		emit_signal('health_changed', health)
 		
 func death():

@@ -9,7 +9,7 @@ custom_solver_bias = 0.0
 radius = 23.7695
 height = 0.813782
 
-[node name="HealthBoost" type="Area2D"]
+[node name="HealthBoost" type="Area2D" index="0"]
 
 input_pickable = true
 gravity_vec = Vector2( 0, 1 )

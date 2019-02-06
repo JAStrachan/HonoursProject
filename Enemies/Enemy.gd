@@ -18,7 +18,7 @@ func bullet_hit():
 	else:
 		health = health - bulletDamage
 	
-	
+# Used for attacking the player through melee damage, currently in development as a figure out best practice	
 func hit_player():
 	pass
 		
