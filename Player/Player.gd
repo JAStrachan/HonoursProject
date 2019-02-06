@@ -2,8 +2,6 @@ extends KinematicBody2D
 
 export (int) var speed = 200
 
-export (float) var shoot_speed = 0.5
-
 export (int) var health = 100
 export (int) var max_health = 150
 export (int) var enemy_physical_attack = 20
