@@ -6,9 +6,9 @@
 [sub_resource type="CircleShape2D" id=1]
 
 custom_solver_bias = 0.0
-radius = 20.9013
+radius = 18.7908
 
-[node name="Player" type="KinematicBody2D" index="0"]
+[node name="Player" type="KinematicBody2D"]
 
 input_pickable = false
 collision_layer = 1
@@ -17,10 +17,13 @@ collision/safe_margin = 0.08
 script = ExtResource( 1 )
 speed = 200
 shoot_speed = 0.5
+health = 100
+max_health = 150
+enemy_physical_attack = 20
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
 
-position = Vector2( -0.853407, 0.413905 )
+position = Vector2( -0.429276, 0.643921 )
 shape = SubResource( 1 )
 _sections_unfolded = [ "Transform" ]
 

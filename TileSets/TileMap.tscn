@@ -1,9 +1,12 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://TileSets/brickTileset.tres" type="TileSet" id=1]
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Enemies/BasicEnemy.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/GUI.tscn" type="PackedScene" id=4]
+[ext_resource path="res://powerups/HealthBoost.tscn" type="PackedScene" id=5]
 
-[node name="Node" type="Node"]
+[node name="Node" type="Node" index="0"]
 
 [node name="TileMap" type="TileMap" parent="." index="0"]
 
@@ -32,5 +35,22 @@ __meta__ = {
 [node name="Player" parent="." index="1" instance=ExtResource( 2 )]
 
 position = Vector2( 200, 190 )
+
+[node name="Enemy" parent="." index="2" instance=ExtResource( 3 )]
+
+position = Vector2( 250, 90 )
+
+[node name="GUI" parent="." index="3" instance=ExtResource( 4 )]
+
+margin_top = -10.0
+margin_bottom = 30.0
+
+[node name="HealthBoost" parent="." index="4" instance=ExtResource( 5 )]
+
+position = Vector2( 80, 220 )
+scale = Vector2( 0.5, 0.5 )
+_sections_unfolded = [ "Transform" ]
+
+[connection signal="health_changed" from="Player" to="GUI" method="_on_Player_health_changed"]
 
 
