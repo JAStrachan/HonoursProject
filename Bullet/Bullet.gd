@@ -20,7 +20,7 @@ func _physics_process(delta):
 		#velocity = velocity.bounce(collision.normal)
 		#I don't think bouncing off things is a great idea right now
 		if collision.collider.has_method("bullet_hit"):
-			collision.collider.hit()
+			collision.collider.bullet_hit()
 			
 		queue_free()
 

@@ -4,6 +4,13 @@ export (int) var speed = 200
 
 export (float) var shoot_speed = 0.5
 
+export (int) var health = 100
+export (int) var max_health = 150
+export (int) var enemy_physical_attack = 20
+
+signal death
+signal health_changed
+
 
 var velocity = Vector2()
 var can_shoot = true
@@ -11,8 +18,6 @@ var can_shoot = true
 var Bullet = preload("res://Bullet/PlayerBullet.tscn")
 
 func _ready():
-	# Called when the node is added to the scene for the first time.
-	# Initialization here
 	can_shoot = true
 
 # Basic movement taken from tutorial at http://docs.godotengine.org/en/3.0/tutorials/2d/2d_movement.html
@@ -32,23 +37,58 @@ func get_input(delta):
 		velocity.y -= 1
 	# normalised the velocity otherwise going diagonal would be faster
 	velocity = velocity.normalized() * speed
-	rotate(rotation * delta)
-	
-	# Used from https://docs.godotengine.org/en/latest/tutorials/physics/using_kinematic_body_2d.html
+	rotate(rotation * delta) # rotates the character independant of its movement
+
 	if Input.is_action_pressed('ui_shoot'):
-		if can_shoot:
+		shoot()
+	
+	
+func _physics_process(delta):
+	get_input(delta)
+#	var collision = move_and_collide(velocity * delta)
+#	if collision:
+#		velocity = velocity.slide(collision.normal)
+#		# For collision with enemies that are still as the collision dectection only works when something is moving
+#		if collision.collider.has_method("hit_player"):
+#			velocity = velocity.bounce(collision.normal)
+#			enemy_touch()
+#		else:
+#			# Have this so player's will bounce off enemies but slide along walls
+#			pass
+	var collision = move_and_slide(velocity)
+
+
+
+func _on_time_since_last_shot_timeout():
+	can_shoot = true
+
+# Used from https://docs.godotengine.org/en/latest/tutorials/physics/using_kinematic_body_2d.html
+func shoot():
+	if can_shoot:
 			var bullet = Bullet.instance()
 			bullet.spawn(self.global_position, rotation)
 			bullet.add_collision_exception_with(self)
 			get_parent().add_child(bullet) #don't want bullet to move with me, so add it as child of parent
 			can_shoot = false
 			$time_since_last_shot.start()
+			
+func enemy_touch():
+	hit()
 	
-	
-func _physics_process(delta):
-	get_input(delta)
-	move_and_slide(velocity)
+func heal(health_boost):
+	health = health + health_boost
+	if health > max_health:
+		health = max_health
+	emit_signal('health_changed', health)
 
-
-func _on_time_since_last_shot_timeout():
-	can_shoot = true
+func hit():
+	if health - enemy_physical_attack <=0:
+		emit_signal("death")
+		emit_signal('health_changed', 0)
+		death()
+	else:
+		health = health - enemy_physical_attack
+		emit_signal('health_changed', health)
+		
+func death():
+	queue_free()
