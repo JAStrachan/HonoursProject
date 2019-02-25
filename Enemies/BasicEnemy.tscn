@@ -18,7 +18,7 @@ script = ExtResource( 1 )
 _sections_unfolded = [ "Collision" ]
 health = 100
 bulletDamage = 50
-vision_distance = 100
+vision_distance = 150
 
 [node name="Sprite" type="Sprite" parent="." index="0"]
 

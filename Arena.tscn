@@ -30,6 +30,7 @@ _sections_unfolded = [ "Cell" ]
 [node name="Enemy" parent="." index="1" instance=ExtResource( 2 )]
 
 position = Vector2( 160, 64 )
+vision_distance = 150
 
 [node name="Player" parent="." index="2" instance=ExtResource( 3 )]
 
