@@ -2,7 +2,7 @@
 
 [ext_resource path="res://TileSets/tileset_complet.png" type="Texture" id=1]
 
-[node name="Tileset" type="Node2D" index="0"]
+[node name="Tileset" type="Node2D"]
 
 [node name="Sprite" type="Sprite" parent="." index="0"]
 
@@ -110,6 +110,21 @@ centered = false
 region_enabled = true
 region_rect = Rect2( 80, 16, 16, 16 )
 _sections_unfolded = [ "Animation", "Offset", "Region" ]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Sprite12" index="0"]
+
+input_pickable = false
+collision_layer = 1
+collision_mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Sprite12/StaticBody2D" index="0"]
+
+build_mode = 0
+polygon = PoolVector2Array( 0, 0, 11.7444, -0.0225983, 11.7444, 11.1552, 0.328766, 11.1552 )
 
 [node name="Sprite13" type="Sprite" parent="." index="12"]
 
