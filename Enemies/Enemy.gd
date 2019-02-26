@@ -8,7 +8,6 @@ var raycast_hit_pos = [] # the positions the raycasts have hit
 
 var detection_area_colour = Color(.867, .91, .247, 0.1)
 var raycast_debug_colour = Color(1,0,0,1)
-var debug	# if we are in debugging state or not
 
 var velocity = Vector2()
 
@@ -68,15 +67,6 @@ func detect_enemies():
 			if result.collider.name == 'Player':
 				rotation = (target.position - position).angle()
 				break
-	
-# for squares
-#func get_edges_of_target():
-## The corners of the threat
-#	var target_extents = target.get_node('CollisionShape2D').shape.extents - Vector2(5, 5)
-#	var nw = target.position - target_extents
-#	var se = target.position + target_extents
-#	var ne = target.position + Vector2(target_extents.x, -target_extents.y)
-#	var sw = target.position + Vector2(-target_extents.x, target_extents.y)
 
 func _draw():
     # display the visibility area
