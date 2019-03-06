@@ -3,15 +3,24 @@ extends KinematicBody2D
 export (int) var health = 100
 export (int) var bulletDamage = 50
 export (int) var vision_distance = 150
+export (int) var SPEED = 10
+
+# The a star stuff is adapted from GDQuest A star code
+# https://github.com/GDquest/Godot-engine-tutorial-demos/tree/master/2018/03-30-astar-pathfinding
+enum TRACKING_STATE {NOT_TRACKING, TRACKING}
+var track_state = null
 
 var raycast_hit_pos = [] # the positions the raycasts have hit
 
 var detection_area_colour = Color(.867, .91, .247, 0.1)
 var raycast_debug_colour = Color(1,0,0,1)
 
+var path = []
 var velocity = Vector2()
 
-var target	 # who we are shooting at
+var target	 # who we are shooting at and tracking
+var target_point_world = Vector2() # where we are going next
+
 
 signal enemy_death
 
@@ -21,6 +30,19 @@ func _ready():
 	var shape = CircleShape2D.new()
 	shape.radius = vision_distance
 	$AreaDetection/CollisionShape2D.shape = shape
+	
+	_change_state(NOT_TRACKING)
+	
+func _change_state(newState):
+	if newState == TRACKING:
+		path = get_parent().get_node('TileMap').get_path(position, target.position)
+		if not path or len(path) == 1:
+			_change_state(NOT_TRACKING)
+			return
+		# The index 0 is the starting cell
+		# we don't want the character to move back to it in this example
+		target_point_world = path[1]
+	track_state = newState
 
 func bullet_hit():
 	if health - bulletDamage <= 0:
@@ -32,11 +54,18 @@ func bullet_hit():
 	
 # Used for attacking the player through melee damage, currently in development as a figure out best practice	
 func hit_player():
-	pass
-
+	pass	
+	
 func _physics_process(delta):
 	update() # allows us to draw the new debug lines every frame
 	if target:
+		var arrived_to_next_point = move_to(target_point_world)
+		if arrived_to_next_point:
+			path.remove(0)
+			if len(path) == 0:
+				_change_state(NOT_TRACKING)
+				return
+			target_point_world = path[0]
 		# if a target is within the area of vision calculate if the enemy can see the target
 		detect_enemies()
 		
@@ -47,7 +76,18 @@ func _physics_process(delta):
 		if collision.collider.has_method("enemy_touch"):
 			collision.collider.enemy_touch()
 			
-			
+func move_to(world_position):
+	var MASS = 10.0
+	# How far away from the player it should be! (roughly)
+	var ARRIVE_DISTANCE = 10.0
+
+	var desired_velocity = (world_position - position).normalized() * SPEED
+	var steering = desired_velocity - velocity
+	velocity += steering / MASS
+	position += velocity * get_process_delta_time()
+	rotation = velocity.angle()
+	return position.distance_to(world_position) < ARRIVE_DISTANCE
+
 # Used for detecting any threats to itself via raycasting
 # Taken from http://kidscancode.org/blog/2018/03/godot3_visibility_raycasts/
 func detect_enemies():
@@ -66,6 +106,7 @@ func detect_enemies():
 			raycast_hit_pos.append(result.position)
 			if result.collider.name == 'Player':
 				rotation = (target.position - position).angle()
+				_change_state(TRACKING)
 				break
 
 func _draw():
