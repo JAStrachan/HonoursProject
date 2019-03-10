@@ -1,16 +1,26 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Bullet/Bullet.gd" type="Script" id=1]
-[ext_resource path="res://Player/PlayerBullet.png" type="Texture" id=2]
+[ext_resource path="res://Player/Player Laser.png" type="Texture" id=2]
 
-[sub_resource type="SpriteFrames" id=1]
+[sub_resource type="Animation" id=1]
 
-animations = [ {
-"frames": [ ExtResource( 2 ) ],
-"loop": true,
-"name": "default",
-"speed": 5.0
-} ]
+resource_name = "LaserFiring"
+length = 0.8
+loop = true
+step = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.3, 0.5, 0.6, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5 ]
+}
 
 [node name="KinematicBody2D" type="KinematicBody2D"]
 
@@ -24,13 +34,24 @@ bullet_velocity = 400
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." index="0"]
 
 build_mode = 0
-polygon = PoolVector2Array( 20, 0, 10, 10, -10, 10, -20, 0, -10, -10, 10, -10, 20, 0 )
+polygon = PoolVector2Array( 5.75991, 0.272263, 3.65174, 4.48858, -7.15257, 3.69802, -7.6796, -1.30885, 1.01655, -5.26165 )
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="." index="1"]
+[node name="Sprite" type="Sprite" parent="." index="1"]
 
 rotation = 1.5708
-frames = SubResource( 1 )
-animation = "default"
-_sections_unfolded = [ "Transform" ]
+texture = ExtResource( 2 )
+vframes = 3
+hframes = 3
+_sections_unfolded = [ "Animation", "Region", "Transform" ]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Sprite" index="0"]
+
+root_node = NodePath("..")
+autoplay = ""
+playback_process_mode = 1
+playback_default_blend_time = 0.0
+playback_speed = 1.0
+anims/LaserFiring = SubResource( 1 )
+blend_times = [  ]
 
 

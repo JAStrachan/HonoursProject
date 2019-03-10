@@ -7,7 +7,7 @@
 [ext_resource path="res://scenes/GUI.tscn" type="PackedScene" id=5]
 [ext_resource path="res://powerups/HealthBoost.tscn" type="PackedScene" id=6]
 
-[node name="Map" type="Node" index="0"]
+[node name="Map" type="Node"]
 
 [node name="TileMap" type="TileMap" parent="." index="0"]
 
@@ -42,7 +42,6 @@ position = Vector2( 360, 270 )
 [node name="Enemy" parent="." index="2" instance=ExtResource( 4 )]
 
 position = Vector2( 220, 100 )
-SPEED = 10
 
 [node name="GUI" parent="." index="3" instance=ExtResource( 5 )]
 

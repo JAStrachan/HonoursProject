@@ -93,7 +93,7 @@ func move_to(world_position):
 func detect_enemies():
 	raycast_hit_pos = []
 	var space_state = get_world_2d().direct_space_state
-	var radius = 25 # TODO set this to 16 when you have resized the sprites
+	var radius = 16
 	var north = target.position + Vector2(0, radius)
 	var south = target.position + Vector2(0, -radius)
 	var west = target.position + Vector2(-radius, 0)

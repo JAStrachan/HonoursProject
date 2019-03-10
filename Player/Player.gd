@@ -15,6 +15,8 @@ var can_shoot = true
 
 var Bullet = preload("res://Bullet/PlayerBullet.tscn")
 
+onready var springarm = $'Pivot'
+
 func _ready():
 	can_shoot = true
 
@@ -35,7 +37,9 @@ func get_input(delta):
 		velocity.y -= 1
 	# normalised the velocity otherwise going diagonal would be faster
 	velocity = velocity.normalized() * speed
+	
 	rotate(rotation * delta) # rotates the character independant of its movement
+	springarm.rotate(rotation * delta) # rotates the camera so you always see a little in front of you
 
 	if Input.is_action_pressed('ui_shoot'):
 		shoot()
@@ -63,12 +67,12 @@ func _on_time_since_last_shot_timeout():
 # Used from https://docs.godotengine.org/en/latest/tutorials/physics/using_kinematic_body_2d.html
 func shoot():
 	if can_shoot:
-			var bullet = Bullet.instance()
-			bullet.spawn(self.global_position, rotation)
-			bullet.add_collision_exception_with(self)
-			get_parent().add_child(bullet) #don't want bullet to move with me, so add it as child of parent
-			can_shoot = false
-			$time_since_last_shot.start()
+		var bullet = Bullet.instance()
+		bullet.spawn(self.global_position, rotation)
+		bullet.add_collision_exception_with(self)
+		get_parent().add_child(bullet) #don't want bullet to move with me, so add it as child of parent
+		can_shoot = false
+		$time_since_last_shot.start()
 		
 # if an enemy physically attacks a player (ie touches a player)
 func enemy_touch():

@@ -18,14 +18,22 @@ const BASE_LINE_WIDTH = 3.0
 const DRAW_COLOR = Color('#fff')
 
 # get_used_cells_by_id is a method from the TileMap node
-# here the id 0 corresponds to the walls tile, the obstacles
+# here the ids 0,1,2,5,6,7 corresponds to the walls tile, the obstacles
 onready var obstacles = get_used_cells_by_id(0)
+
 onready var _half_cell_size = cell_size / 2
 
 func _ready():
+	obstacles.append(get_used_cells_by_id(1))
+	obstacles.append(get_used_cells_by_id(2))
+	obstacles.append(get_used_cells_by_id(3))
+	obstacles.append(get_used_cells_by_id(4))
+	obstacles.append(get_used_cells_by_id(5))
+	obstacles.append(get_used_cells_by_id(6))
 	var walkable_cells_list = astar_add_walkable_cells(obstacles)
-	astar_connect_walkable_cells(walkable_cells_list)
-	#astar_connect_walkable_cells_diagonal(walkable_cells_list)
+	#astar_connect_walkable_cells(walkable_cells_list)
+	astar_connect_walkable_cells_diagonal(walkable_cells_list)
+	
 
 # Loops through all cells within the map's bounds and
 # adds all points to the astar_node, except the obstacles
@@ -75,7 +83,7 @@ func astar_connect_walkable_cells(points_array):
 			# connection to be bilateral: from point A to B and B to A
 			# If you set this value to false, it becomes a one-way path
 			# As we loop through all points we can set it to false
-			astar_node.connect_points(point_index, point_relative_index, false)
+			astar_node.connect_points(point_index, point_relative_index, true)
 
 
 # This is a variation of the method above
