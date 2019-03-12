@@ -21,6 +21,8 @@ var velocity = Vector2()
 var target	 # who we are shooting at and tracking
 var target_point_world = Vector2() # where we are going next
 
+onready var behaviourTree = $'BehaviorTree'
+onready var blackboard = $'BehaviorBlackboard'
 
 signal enemy_death
 
@@ -55,6 +57,9 @@ func bullet_hit():
 # Used for attacking the player through melee damage, currently in development as a figure out best practice	
 func hit_player():
 	pass	
+	
+func _process(delta):
+	behaviourTree.tick(self, blackboard)
 	
 func _physics_process(delta):
 	update() # allows us to draw the new debug lines every frame
