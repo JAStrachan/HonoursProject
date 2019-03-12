@@ -21,8 +21,8 @@ var velocity = Vector2()
 var target	 # who we are shooting at and tracking
 var target_point_world = Vector2() # where we are going next
 
-onready var behaviourTree = $'BehaviorTree'
-onready var blackboard = $'BehaviorBlackboard'
+var behaviourTree
+var blackboard
 
 signal enemy_death
 
@@ -34,6 +34,8 @@ func _ready():
 	$AreaDetection/CollisionShape2D.shape = shape
 	
 	_change_state(NOT_TRACKING)
+	blackboard = get_node("/root/Map/BehaviorBlackboard")
+	behaviourTree = get_node('/root/Map/BehaviorTree')
 	
 func _change_state(newState):
 	if newState == TRACKING:
@@ -59,7 +61,8 @@ func hit_player():
 	pass	
 	
 func _process(delta):
-	behaviourTree.tick(self, blackboard)
+	if target:
+		behaviourTree.tick(self, blackboard)
 	
 func _physics_process(delta):
 	update() # allows us to draw the new debug lines every frame
