@@ -32,16 +32,16 @@ func _ready():
 	var shape = CircleShape2D.new()
 	shape.radius = vision_distance
 	$AreaDetection/CollisionShape2D.shape = shape
-	
-	_change_state(NOT_TRACKING)
+	 
+	_change_state(TRACKING_STATE.NOT_TRACKING)
 	blackboard = get_node("/root/Map/BehaviorBlackboard")
 	behaviourTree = get_node('/root/Map/BehaviorTree')
 	
 func _change_state(newState):
-	if newState == TRACKING:
-		path = get_parent().get_node('TileMap').get_path(position, target.position)
+	if newState == TRACKING_STATE.TRACKING:
+		path = get_parent().get_node('TileMap').get_world_path(position, target.position)
 		if not path or len(path) == 1:
-			_change_state(NOT_TRACKING)
+			_change_state(TRACKING_STATE.NOT_TRACKING)
 			return
 		# The index 0 is the starting cell
 		# we don't want the character to move back to it in this example
@@ -71,7 +71,7 @@ func _physics_process(delta):
 		if arrived_to_next_point:
 			path.remove(0)
 			if len(path) == 0:
-				_change_state(NOT_TRACKING)
+				_change_state(TRACKING_STATE.NOT_TRACKING)
 				return
 			target_point_world = path[0]
 		# if a target is within the area of vision calculate if the enemy can see the target
@@ -114,7 +114,7 @@ func detect_enemies():
 			raycast_hit_pos.append(result.position)
 			if result.collider.name == 'Player':
 				rotation = (target.position - position).angle()
-				_change_state(TRACKING)
+				_change_state(TRACKING_STATE.TRACKING)
 				break
 
 func _draw():
