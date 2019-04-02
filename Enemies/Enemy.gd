@@ -19,6 +19,8 @@ var path = []
 var velocity = Vector2()
 
 var target	 # who we are shooting at and tracking
+var threats = [] # the list of threats in range
+var friends = [] # the list of friends in range so we can avoid them
 var target_point_world = Vector2() # where we are going next
 
 var behaviourTree
@@ -32,6 +34,9 @@ func _ready():
 	var shape = CircleShape2D.new()
 	shape.radius = vision_distance
 	$AreaDetection/CollisionShape2D.shape = shape
+	
+	add_to_group("Reds")
+	add_to_group("enemies")
 	 
 	_change_state(TRACKING_STATE.NOT_TRACKING)
 	blackboard = get_node("/root/Map/BehaviorBlackboard")
@@ -69,7 +74,7 @@ func _physics_process(delta):
 	if target:
 		var arrived_to_next_point = move_to(target_point_world)
 		if arrived_to_next_point:
-			path.remove(0)
+			#path.remove(0)
 			if len(path) == 0:
 				_change_state(TRACKING_STATE.NOT_TRACKING)
 				return
@@ -91,7 +96,7 @@ func move_to(world_position):
 
 	var desired_velocity = (world_position - position).normalized() * SPEED
 	var steering = desired_velocity - velocity
-	velocity += steering / MASS
+	velocity += steering / MASS 
 	position += velocity * get_process_delta_time()
 	rotation = velocity.angle()
 	return position.distance_to(world_position) < ARRIVE_DISTANCE

@@ -51,5 +51,7 @@ position = Vector2( 656, 416 )
 [node name="Enemy3" parent="." instance=ExtResource( 10 )]
 position = Vector2( 368, 720 )
 
-[node name="GUI" parent="." instance=ExtResource( 11 )]
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="GUI" parent="CanvasLayer" instance=ExtResource( 11 )]
 

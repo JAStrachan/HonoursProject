@@ -21,20 +21,40 @@ const DRAW_COLOR = Color('#fff')
 # here the ids 0,1,2,5,6,7 corresponds to the walls tile, the obstacles
 onready var obstacles = get_used_cells_by_id(0)
 
+var enemies = []
+var enemyPositions = []
+
 onready var _half_cell_size = cell_size / 2
 
 func _ready():
-	obstacles.append(get_used_cells_by_id(1))
-	obstacles.append(get_used_cells_by_id(2))
-	obstacles.append(get_used_cells_by_id(3))
-	obstacles.append(get_used_cells_by_id(4))
-	obstacles.append(get_used_cells_by_id(5))
-	obstacles.append(get_used_cells_by_id(6))
-	var walkable_cells_list = astar_add_walkable_cells(obstacles)
+	#obstacles.append(get_used_cells_by_id(1))
+	#obstacles.append(get_used_cells_by_id(2))
+	#obstacles.append(get_used_cells_by_id(3))
+	#obstacles.append(get_used_cells_by_id(4))
+	#obstacles.append(get_used_cells_by_id(5))
+	#obstacles.append(get_used_cells_by_id(6))
+	
+	var walkable_cells_list = astar_add_walkable_cells([obstacles,enemyPositions])
 	#astar_connect_walkable_cells(walkable_cells_list)
 	astar_connect_walkable_cells_diagonal(walkable_cells_list)
 	
-
+func get_enemy_positions():
+	enemies = get_tree().get_nodes_in_group("enemies")
+	for enemy in enemies:
+		enemyPositions.append(enemy.position)
+	return enemyPositions
+	
+func _process(delta):
+	enemyPositions = get_enemy_positions()
+	
+	var listOfThingsToAvoid = obstacles.duplicate()
+	for enemyPos in enemyPositions:
+		listOfThingsToAvoid.append(enemyPos)
+	
+	var walkable_cells_list = astar_add_walkable_cells(listOfThingsToAvoid)
+	#astar_connect_walkable_cells(walkable_cells_list)
+	astar_connect_walkable_cells_diagonal(walkable_cells_list)
+		
 # Loops through all cells within the map's bounds and
 # adds all points to the astar_node, except the obstacles
 func astar_add_walkable_cells(obstacles = []):
