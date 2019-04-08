@@ -26,6 +26,7 @@ var target_point_world = Vector2() # where we are going next
 var behaviourTree
 var blackboard
 
+
 signal enemy_death
 
 func _ready():
@@ -40,7 +41,7 @@ func _ready():
 	 
 	_change_state(TRACKING_STATE.NOT_TRACKING)
 	blackboard = get_node("/root/Map/BehaviorBlackboard")
-	behaviourTree = get_node('/root/Map/BehaviorTree')
+	behaviourTree = get_node('/root/Map/MediumEnemy')
 	
 func _change_state(newState):
 	if newState == TRACKING_STATE.TRACKING:
@@ -74,15 +75,15 @@ func _physics_process(delta):
 	if target:
 		var arrived_to_next_point = move_to(target_point_world)
 		if arrived_to_next_point:
-			#path.remove(0)
 			if len(path) == 0:
 				_change_state(TRACKING_STATE.NOT_TRACKING)
 				return
 			target_point_world = path[0]
 		# if a target is within the area of vision calculate if the enemy can see the target
 		detect_enemies()
+		rotate(rotation * delta) # rotates the character independant of its movement
 		
-	rotate(rotation * delta) # rotates the character independant of its movement
+	
 	var collision = move_and_collide(velocity * delta)
 	if collision:
 		velocity = velocity.bounce(collision.normal)
@@ -152,4 +153,8 @@ func _on_AreaDetection_body_entered(body):
 
 func _on_AreaDetection_body_exited(body):
 	if body == target:
-		target = null
+		velocity = position.normalized()
+		$PeriodOfMemory.start()
+
+func _on_PeriodOfMemory_timeout():
+	target = null

@@ -21,5 +21,9 @@ collision_layer = 16384
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AreaDetection"]
 
+[node name="PeriodOfMemory" type="Timer" parent="."]
+wait_time = 3.0
+
 [connection signal="body_entered" from="AreaDetection" to="." method="_on_AreaDetection_body_entered"]
 [connection signal="body_exited" from="AreaDetection" to="." method="_on_AreaDetection_body_exited"]
+[connection signal="timeout" from="PeriodOfMemory" to="." method="_on_PeriodOfMemory_timeout"]
