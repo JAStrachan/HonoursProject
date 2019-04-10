@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://TileSets/brickTileset.tres" type="TileSet" id=1]
 [ext_resource path="res://TileMap.gd" type="Script" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://Enemies/BasicEnemy.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/GUI.tscn" type="PackedScene" id=5]
 [ext_resource path="res://powerups/HealthBoost.tscn" type="PackedScene" id=6]
+[ext_resource path="res://addons/godot-behavior-tree-plugin/blackboard.gd" type="Script" id=7]
+[ext_resource path="res://addons/godot-behavior-tree-plugin/blackboard_icon.png" type="Texture" id=8]
 
 [node name="Map" type="Node"]
 
@@ -32,5 +34,11 @@ margin_bottom = 30.0
 [node name="HealthBoost" parent="." instance=ExtResource( 6 )]
 position = Vector2( 80, 220 )
 scale = Vector2( 0.5, 0.5 )
+
+[node name="BehaviorBlackboard" type="Node" parent="."]
+script = ExtResource( 7 )
+__meta__ = {
+"_editor_icon": ExtResource( 8 )
+}
 
 [connection signal="health_changed" from="Player" to="GUI" method="_on_Player_health_changed"]

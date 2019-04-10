@@ -1,6 +1,6 @@
 extends MarginContainer
 
-onready var health_label = $HBoxContainer/HealthUI/Background/HealthValue
+onready var health_label = $HBoxContainer/HBoxContainer/HealthUI/Background/HealthValue
 
 func update_health(newHealth):
 	health_label.text = str(newHealth)
