@@ -6,8 +6,11 @@ export (int) var health = 100
 export (int) var max_health = 150
 export (int) var enemy_physical_attack = 20
 
+var score
+
 signal death
 signal health_changed
+signal score_changed
 
 
 var velocity = Vector2()
@@ -19,7 +22,7 @@ onready var springarm = $'Pivot'
 
 func _ready():
 	can_shoot = true
-
+	score = 0
 # Basic movement taken from tutorial at http://docs.godotengine.org/en/3.0/tutorials/2d/2d_movement.html
 func get_input(delta):
 	# Get the mouse position and the angle we need to point ourselves to it
@@ -59,8 +62,6 @@ func _physics_process(delta):
 #			pass
 	var collision = move_and_slide(velocity)
 
-
-
 func _on_time_since_last_shot_timeout():
 	can_shoot = true
 
@@ -95,3 +96,7 @@ func hit(damage):
 		
 func death():
 	queue_free()
+
+func _on_Enemy_enemy_death(add_to_score):
+	score = score + add_to_score
+	emit_signal('score_changed', score)

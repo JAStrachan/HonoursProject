@@ -18,6 +18,8 @@ var raycast_debug_colour = Color(1,0,0,1)
 var path = []
 var velocity = Vector2()
 
+var score_to_add = 20
+
 var target	 # who we are shooting at and tracking
 var threats = [] # the list of threats in range
 var friends = [] # the list of friends in range so we can avoid them
@@ -57,7 +59,7 @@ func _change_state(newState):
 func bullet_hit():
 	if health - bulletDamage <= 0:
 		health = 0
-		emit_signal('enemy_death')
+		emit_signal('enemy_death', score_to_add)
 		queue_free()
 	else:
 		health = health - bulletDamage
