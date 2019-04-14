@@ -27,12 +27,14 @@ var enemyPositions = []
 onready var _half_cell_size = cell_size / 2
 
 func _ready():
-	#obstacles.append(get_used_cells_by_id(1))
-	#obstacles.append(get_used_cells_by_id(2))
-	#obstacles.append(get_used_cells_by_id(3))
-	#obstacles.append(get_used_cells_by_id(4))
-	#obstacles.append(get_used_cells_by_id(5))
-	#obstacles.append(get_used_cells_by_id(6))
+	obstacles.append(get_used_cells_by_id(1))
+	obstacles.append(get_used_cells_by_id(2))
+	obstacles.append(get_used_cells_by_id(3))
+	obstacles.append(get_used_cells_by_id(4))
+	obstacles.append(get_used_cells_by_id(5))
+	obstacles.append(get_used_cells_by_id(6))
+	obstacles.append(get_used_cells_by_id(8))
+	obstacles.append(get_used_cells_by_id(9))
 	
 	var walkable_cells_list = astar_add_walkable_cells([obstacles,enemyPositions])
 	#astar_connect_walkable_cells(walkable_cells_list)

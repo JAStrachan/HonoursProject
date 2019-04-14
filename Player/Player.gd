@@ -87,14 +87,15 @@ func heal(health_boost):
 
 func hit(damage):
 	if health - damage <=0:
-		emit_signal("death")
-		emit_signal('health_changed', 0)
+
 		death()
 	else:
 		health = health - damage
 		emit_signal('health_changed', health)
 		
 func death():
+	emit_signal("death")
+	emit_signal('health_changed', 0)
 	queue_free()
 
 func _on_Enemy_enemy_death(add_to_score):
