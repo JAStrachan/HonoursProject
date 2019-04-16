@@ -18,6 +18,10 @@ _global_script_class_icons={
 config/name="HonoursProject"
 config/icon="res://icon.png"
 
+[debug]
+
+gdscript/warnings/unused_argument=false
+
 [editor_plugins]
 
 enabled=PoolStringArray( "godot-behavior-tree-plugin" )

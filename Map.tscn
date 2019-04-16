@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://addons/godot-behavior-tree-plugin/behavior_tree.gd" type="Script" id=1]
 [ext_resource path="res://addons/godot-behavior-tree-plugin/root_icon.png" type="Texture" id=2]
@@ -19,10 +19,8 @@
 [ext_resource path="res://TileMap.gd" type="Script" id=17]
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=18]
 [ext_resource path="res://Enemies/BasicEnemy.tscn" type="PackedScene" id=19]
-[ext_resource path="res://Enemies/SmallEnemy.tscn" type="PackedScene" id=20]
-[ext_resource path="res://scenes/GUI.tscn" type="PackedScene" id=21]
-[ext_resource path="res://powerups/HealthBoost.tscn" type="PackedScene" id=22]
-[ext_resource path="res://Enemies/LargeEnemy.tscn" type="PackedScene" id=23]
+[ext_resource path="res://scenes/GUI.tscn" type="PackedScene" id=20]
+[ext_resource path="res://powerups/HealthBoost.tscn" type="PackedScene" id=21]
 
 [node name="Map" type="Node"]
 
@@ -100,34 +98,13 @@ position = Vector2( 96, 304 )
 [node name="Enemy" parent="." instance=ExtResource( 19 )]
 position = Vector2( 432, 528 )
 
-[node name="Enemy2" parent="." instance=ExtResource( 19 )]
-position = Vector2( 432, 736 )
-
-[node name="SmallEnemy" parent="." instance=ExtResource( 20 )]
-position = Vector2( 288, 544 )
-
-[node name="SmallEnemy2" parent="." instance=ExtResource( 20 )]
-position = Vector2( 640, 384 )
-
-[node name="SmallEnemy3" parent="." instance=ExtResource( 20 )]
-position = Vector2( 704, 720 )
-
-[node name="Enemy3" parent="." instance=ExtResource( 19 )]
-position = Vector2( 800, 480 )
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="GUI" parent="CanvasLayer" instance=ExtResource( 21 )]
+[node name="GUI" parent="CanvasLayer" instance=ExtResource( 20 )]
 
-[node name="HealthBoost" parent="." instance=ExtResource( 22 )]
+[node name="HealthBoost" parent="." instance=ExtResource( 21 )]
 position = Vector2( 144, 128 )
-
-[node name="LargeEnemy" parent="." instance=ExtResource( 23 )]
-position = Vector2( 214, 640 )
 
 [connection signal="death" from="Player" to="Enemy" method="_on_Player_death"]
 [connection signal="health_changed" from="Player" to="CanvasLayer/GUI" method="_on_Player_health_changed"]
 [connection signal="score_changed" from="Player" to="CanvasLayer/GUI" method="_on_Player_score_changed"]
-[connection signal="enemy_death" from="Enemy" to="Player" method="_on_Enemy_enemy_death"]
-[connection signal="enemy_death" from="Enemy2" to="Player" method="_on_Enemy_enemy_death"]
-[connection signal="enemy_death" from="Enemy3" to="Player" method="_on_Enemy_enemy_death"]

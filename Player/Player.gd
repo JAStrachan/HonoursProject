@@ -60,7 +60,8 @@ func _physics_process(delta):
 #		else:
 #			# Have this so player's will bounce off enemies but slide along walls
 #			pass
-	var collision = move_and_slide(velocity)
+	#var collision = 
+	move_and_slide(velocity)
 
 func _on_time_since_last_shot_timeout():
 	can_shoot = true
