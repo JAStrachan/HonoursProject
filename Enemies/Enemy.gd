@@ -1,8 +1,20 @@
 extends KinematicBody2D
 
-export(float) var SPEED = 200.0
+# The a star stuff is adapted from GDQuest A star code
+# https://github.com/GDquest/Godot-engine-tutorial-demos/tree/master/2018/03-30-astar-pathfinding
 
-enum STATES { IDLE, FOLLOW }
+export(float) var SPEED = 150.0
+export(float) var MASS = 10.0
+export(float) var ARRIVE_DISTANCE = 100.0
+export (int) var health = 100
+export (int) var bulletDamage = 50
+export (int) var vision_distance = 150
+
+# IDLE is when the npc is just sitting around. Will every so often become idle when patrolling
+# FOLLOW is when the npc is actively following a threat
+# PATROL is the npc is patrolling the map following a path
+# FOUNDSPOT is when npc has got in close to a threat and found a spot to fire upon
+enum STATES { IDLE, FOLLOW, PATROL, FOUNDSPOT}
 var _state = null
 
 var path = []
@@ -16,53 +28,57 @@ func _ready():
 	_change_state(STATES.FOLLOW)
 	
 
-
 func _change_state(new_state):
 	if new_state == STATES.FOLLOW:
 		path = get_parent().get_node('/root/Map/TileMap').get_world_path(position, target.position)
 		if not path or len(path) == 1:
-			_change_state(STATES.IDLE)
+			_change_state(STATES.FOUNDSPOT)
 			return
 		# The index 0 is the starting cell
 		# we don't want the character to move back to it in this example
-		target_point_world = path[1]
+		target_point_world = path[0]
 	_state = new_state
 
 
 func _process(delta):
+	if _state == STATES.FOUNDSPOT:
+		if (self.position.distance_to(target.position)) > ARRIVE_DISTANCE:
+			_change_state(STATES.FOLLOW)
 	if _state == STATES.FOLLOW:
-		path = get_parent().get_node('/root/Map/TileMap').get_world_path(position, target.position)
-		var arrived_to_next_point = move_to(target_point_world)
-		if arrived_to_next_point:
+		path = get_parent().get_node('/root/Map/TileMap').get_world_path(self.position, target.position)
+		
+
+func _physics_process(delta):
+	var arrived_to_next_point = move_to(target_point_world)
+	if arrived_to_next_point:
+		if len(path) != 0:
 			path.remove(0)
 			if len(path) == 0:
-				_change_state(STATES.IDLE)
+				_change_state(STATES.FOUNDSPOT)
 				return
 			target_point_world = path[0]
-
+		
+	var collision = move_and_collide(velocity * delta)
+	if collision:
+		velocity = velocity.bounce(collision.normal)
+#		if collision.collider.has_method("enemy_touch"):
+#			collision.collider.enemy_touch()
 
 func move_to(world_position):
-	var MASS = 10.0
-	var ARRIVE_DISTANCE = 10.0
-
 	var desired_velocity = (world_position - position).normalized() * SPEED
 	var steering = desired_velocity - velocity
 	velocity += steering / MASS
-	position += velocity * get_process_delta_time()
 	rotation = velocity.angle()
 	return position.distance_to(world_position) < ARRIVE_DISTANCE
 
 #extends KinematicBody2D
 #
-#export (int) var health = 100
-#export (int) var bulletDamage = 50
-#export (int) var vision_distance = 150
+
 #export (int) var SPEED = 10
 #
 #var Bullet = preload("res://Bullet/PlayerBullet.tscn")
 #
-## The a star stuff is adapted from GDQuest A star code
-## https://github.com/GDquest/Godot-engine-tutorial-demos/tree/master/2018/03-30-astar-pathfinding
+
 #enum TRACKING_STATE {NOT_TRACKING, TRACKING}
 #var track_state = null
 #
