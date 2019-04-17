@@ -5,7 +5,8 @@ extends KinematicBody2D
 
 export(float) var SPEED = 150.0
 export(float) var MASS = 10.0
-export(float) var ARRIVE_DISTANCE = 100.0
+export(float) var ARRIVE_DISTANCE = 10.0
+export(int) var DISTANCE_FROM_THREAT = 100
 export (int) var health = 100
 export (int) var bulletDamage = 50
 export (int) var vision_distance = 150
@@ -36,17 +37,18 @@ func _change_state(new_state):
 			return
 		# The index 0 is the starting cell
 		# we don't want the character to move back to it in this example
-		target_point_world = path[0]
+		target_point_world = path[1]
+	if new_state == STATES.FOUNDSPOT:
+		velocity = position.normalized()
 	_state = new_state
 
 
 func _process(delta):
 	if _state == STATES.FOUNDSPOT:
-		if (self.position.distance_to(target.position)) > ARRIVE_DISTANCE:
+		if (self.position.distance_to(target.position)) > DISTANCE_FROM_THREAT:
 			_change_state(STATES.FOLLOW)
 	if _state == STATES.FOLLOW:
 		path = get_parent().get_node('/root/Map/TileMap').get_world_path(self.position, target.position)
-		
 
 func _physics_process(delta):
 	var arrived_to_next_point = move_to(target_point_world)
@@ -57,7 +59,9 @@ func _physics_process(delta):
 				_change_state(STATES.FOUNDSPOT)
 				return
 			target_point_world = path[0]
-		
+	
+	if self.position.distance_to(target.position) < DISTANCE_FROM_THREAT:
+		_change_state(STATES.FOUNDSPOT)
 	var collision = move_and_collide(velocity * delta)
 	if collision:
 		velocity = velocity.bounce(collision.normal)
