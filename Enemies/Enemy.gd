@@ -7,14 +7,16 @@ export(float) var SPEED = 150.0
 export(float) var MASS = 10.0
 export(int) var DISTANCE_FROM_THREAT = 100 # how far from the player or the threat it should be
 export (int) var health = 100
-export (int) var bulletDamage = 50
 export (int) var vision_distance = 150
+export (bool) var can_shoot = true
+export (int) var score_to_add = 20
 
 # IDLE is when the npc is just sitting around. Will every so often become idle when patrolling
 # FOLLOW is when the npc is actively following a threat
 # PATROL is the npc is patrolling the map following a path
-# FOUNDSPOT is when npc has got in close to a threat and found a spot to fire upon
-enum STATES { IDLE, FOLLOW, PATROL, FOUNDSPOT}
+# FOUNDSPOT is when npc has got in close to a threat and found a spot to fire upon LINE OF SIGHT
+# TRACKING is when npc is following a threat and has a line of sight on it
+enum STATES { IDLE, FOLLOW, PATROL, FOUNDSPOT, TRACKING}
 var _state = null
 
 var raycast_hit_pos = [] # the positions the raycasts have hit
@@ -24,14 +26,14 @@ var raycast_debug_colour = Color(1,0,0,1)
 
 var path = []
 var target
-var target_point_world = Vector2()
+var target_point_world = Vector2() # the next point in the path
 
 var threats = [] # the list of threats in range
 var friends = [] # the list of friends in range so we can avoid them
+var enemy_line_of_sight = false
 
 var Bullet = preload("res://Bullet/PlayerBullet.tscn")
-var score_to_add = 20
-var can_shoot = true
+
 
 var velocity = Vector2()
 
@@ -44,51 +46,74 @@ func _ready():
 
 func _change_state(new_state):
 	if new_state == STATES.FOLLOW:
-		path = get_parent().get_node('/root/Map/TileMap').get_world_path(position, target.position)
-		if not path or len(path) == 1:
-			_change_state(STATES.FOUNDSPOT)
-			return
-		# The index 0 is the starting cell
-		# we don't want the character to move back to it in this example
-		target_point_world = path[1]
-	if new_state == STATES.FOUNDSPOT:
-		velocity = position.normalized()
+		# Calculates path in the physics_process
+		detection_area_colour = Color(0,1,0,0.1) # green
+		
+	if new_state == STATES.TRACKING:
+		# Calculates path in the physics_process
+		detection_area_colour = Color(1,0,0,0.1) # red
+		
+	if new_state == STATES.IDLE:
+		velocity = Vector2(0,0)
+		detection_area_colour = Color(.867, .91, .247, 0.1) # yellow
 	
+	if new_state == STATES.FOUNDSPOT:
+		velocity = Vector2(0,0)
+		detection_area_colour = Color(0, 0.764, 0.819,0.1) # cyan-ish
+		
 	## TODO add proper patrolling behaviour
 	if new_state == STATES.PATROL:
-		velocity = position.normalized()
+		velocity = Vector2(0,0)
+		detection_area_colour = Color(.867, .91, .247, 0.1) # yellow
+		
 	_state = new_state
-
 
 func _process(delta):
 	update() # Used to add the drawing of the debugging behaviour
-	if _state == STATES.FOUNDSPOT:
-		# Switch back to following threat if it is far away enough
-		if (self.position.distance_to(target.position)) > DISTANCE_FROM_THREAT:
-			_change_state(STATES.FOLLOW)
-	if _state == STATES.FOLLOW:
-		path = get_parent().get_node('/root/Map/TileMap').get_world_path(self.position, target.position)
+	#pass
+	
 
 func _physics_process(delta):
+	if _state == STATES.FOUNDSPOT:
+		# Switch back to following threat if it is far away enough
+		var distanceToTarget = self.position.distance_to(target.position)
+		if distanceToTarget > DISTANCE_FROM_THREAT + 10 or not enemy_line_of_sight :
+			_change_state(STATES.FOLLOW)
+		elif distanceToTarget > DISTANCE_FROM_THREAT + 10 and enemy_line_of_sight :
+			_change_state(STATES.TRACKING)
+			
+	if _state == STATES.FOLLOW or _state == STATES.TRACKING:
+		path = get_parent().get_node('/root/Map/TileMap').get_world_path(self.position, target.position)
+		target_point_world = path[1]
+		if enemy_line_of_sight:
+			_change_state(STATES.TRACKING)
+			
 	# if it is attacking do
-	if _state == STATES.FOLLOW or _state == STATES.FOUNDSPOT:
-		detect_enemies()
-		rotate(rotation * delta) # rotates the character independant of its movement
-		shoot()
+	if _state == STATES.FOLLOW or _state == STATES.FOUNDSPOT or _state == STATES.TRACKING:
+		detect_enemies() # determines which way the character faces if line of sight can be achieved
 		
-		if _state == STATES.FOLLOW:
+		if _state == STATES.FOLLOW or _state == STATES.TRACKING:
 			var arrived_to_next_point = move_to(target_point_world)
 			if arrived_to_next_point:
+				# moving through the path points
 				if len(path) != 0:
 					path.remove(0)
+					# if it is at the end of it's path
 					if len(path) == 0:
-						_change_state(STATES.FOUNDSPOT)
+						if enemy_line_of_sight:
+							_change_state(STATES.FOUNDSPOT)
+						else:
+							_change_state(STATES.IDLE)
 						return
 					target_point_world = path[0]
 		
+		if _state == STATES.FOUNDSPOT or _state == STATES.TRACKING:
+			shoot()
 		
 		if self.position.distance_to(target.position) < DISTANCE_FROM_THREAT:
 			_change_state(STATES.FOUNDSPOT)
+	
+	rotate(rotation * delta) # rotates the character independant of its movement
 	
 	var collision = move_and_collide(velocity * delta)
 	if collision:
@@ -101,12 +126,14 @@ func move_to(world_position):
 	var desired_velocity = (world_position - position).normalized() * SPEED
 	var steering = desired_velocity - velocity
 	velocity += steering / MASS
-	rotation = velocity.angle()
+	if not enemy_line_of_sight:
+		rotation = velocity.angle()
 	return position.distance_to(world_position) < ARRIVE_DISTANCE
 
 # Used for detecting any threats to itself via raycasting
 # Taken from http://kidscancode.org/blog/2018/03/godot3_visibility_raycasts/
 func detect_enemies():
+	
 	raycast_hit_pos = []
 	var space_state = get_world_2d().direct_space_state
 	var radius = 16
@@ -123,8 +150,9 @@ func detect_enemies():
 			# TODO Add for allowing to hit the other threats
 			if result.collider.name == 'Player':
 				# Changes state to follow the threat
+				enemy_line_of_sight = true
 				rotation = (target.position - position).angle()
-				_change_state(STATES.FOLLOW)
+				#_change_state(STATES.FOLLOW)
 				break
 				
 # Shoots in the direction it is facing in
@@ -141,14 +169,15 @@ func shoot():
 func _on_AreaDetection_body_entered(body):
 	# need to add this condition so it does other enemy types as well
 	if body.name == "Player": 
-		if target:
-			return
 		target = body
+		
 		_change_state(STATES.FOLLOW)
+		
+	if target == body and $PeriodOfMemory.time_left() > 0:
+		$PeriodOfMemory.stop()
 
 func _on_AreaDetection_body_exited(body):
 	if body == target:
-		velocity = position.normalized()
 		$PeriodOfMemory.start()
 
 # For how long it can track a threat for once it is out of it's vision

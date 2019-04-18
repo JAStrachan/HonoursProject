@@ -23,6 +23,7 @@ collision_layer = 16384
 
 [node name="PeriodOfMemory" type="Timer" parent="."]
 wait_time = 3.0
+one_shot = true
 
 [node name="time_since_last_shot" type="Timer" parent="."]
 wait_time = 0.7
