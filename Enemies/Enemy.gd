@@ -70,8 +70,14 @@ func _process(delta):
 		path = get_parent().get_node('/root/Map/TileMap').get_world_path(self.position, target.position)
 
 func _physics_process(delta):
-	if _state == STATES.FOLLOW ||_state == STATES.FOUNDSPOT:
+#	if _state == STATES.FOUNDSPOT:
+#		detect_enemies()
+#		rotate(rotation * delta) # rotates the character independant of its movement
+#		shoot(target.position)
+	if _state == STATES.FOLLOW or _state == STATES.FOUNDSPOT:
 		detect_enemies()
+		rotate(rotation * delta) # rotates the character independant of its movement
+		shoot(target.position)
 		
 		if _state == STATES.FOLLOW:
 			var arrived_to_next_point = move_to(target_point_world)
@@ -83,8 +89,7 @@ func _physics_process(delta):
 						return
 					target_point_world = path[0]
 		
-		rotate(rotation * delta) # rotates the character independant of its movement
-		shoot(target.position)
+		
 		if self.position.distance_to(target.position) < DISTANCE_FROM_THREAT:
 			_change_state(STATES.FOUNDSPOT)
 	
