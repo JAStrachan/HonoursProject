@@ -34,7 +34,6 @@ var enemy_line_of_sight = false
 
 var Bullet = preload("res://Bullet/PlayerBullet.tscn")
 
-
 var velocity = Vector2()
 
 func _ready():
@@ -74,6 +73,7 @@ func _process(delta):
 	
 
 func _physics_process(delta):
+	
 	if _state == STATES.FOUNDSPOT:
 		# Switch back to following threat if it is far away enough
 		var distanceToTarget = self.position.distance_to(target.position)
@@ -91,7 +91,6 @@ func _physics_process(delta):
 	# if it is attacking do
 	if _state == STATES.FOLLOW or _state == STATES.FOUNDSPOT or _state == STATES.TRACKING:
 		detect_enemies() # determines which way the character faces if line of sight can be achieved
-		
 		if _state == STATES.FOLLOW or _state == STATES.TRACKING:
 			var arrived_to_next_point = move_to(target_point_world)
 			if arrived_to_next_point:
@@ -110,7 +109,8 @@ func _physics_process(delta):
 		if _state == STATES.FOUNDSPOT or _state == STATES.TRACKING:
 			shoot()
 		
-		if self.position.distance_to(target.position) < DISTANCE_FROM_THREAT:
+		var distanceToTarget = self.position.distance_to(target.position)
+		if distanceToTarget < DISTANCE_FROM_THREAT and not _state == STATES.FOUNDSPOT  :
 			_change_state(STATES.FOUNDSPOT)
 	
 	rotate(rotation * delta) # rotates the character independant of its movement
@@ -173,7 +173,7 @@ func _on_AreaDetection_body_entered(body):
 		
 		_change_state(STATES.FOLLOW)
 		
-	if target == body and $PeriodOfMemory.time_left() > 0:
+	if target == body and $PeriodOfMemory.get_time_left() > 0:
 		$PeriodOfMemory.stop()
 
 func _on_AreaDetection_body_exited(body):
