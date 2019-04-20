@@ -48,7 +48,6 @@ align = 1
 uppercase = true
 
 [node name="ScoreAndEnemyCount" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
-editor/display_folded = true
 margin_top = 173.0
 margin_right = 824.0
 margin_bottom = 295.0

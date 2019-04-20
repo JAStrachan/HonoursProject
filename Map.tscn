@@ -117,3 +117,4 @@ position = Vector2( 256, 336 )
 
 [connection signal="health_changed" from="Player" to="CanvasLayer/GUI" method="_on_Player_health_changed"]
 [connection signal="score_changed" from="Player" to="CanvasLayer/GUI" method="_on_Player_score_changed"]
+[connection signal="enemy_death" from="Enemy" to="Player" method="_on_Enemy_enemy_death"]

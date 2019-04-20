@@ -13,8 +13,8 @@ func spawn(pos, dir):
 func _physics_process(delta):
 	var collision = move_and_collide(velocity * delta)
 	if collision:
-		if collision.collider.has_method("bullet_hit", bullet_damage):
-			collision.collider.bullet_hit()
+		if collision.collider.has_method("bullet_hit"):
+			collision.collider.bullet_hit(bullet_damage)
 			
 		queue_free()
 

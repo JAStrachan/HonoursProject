@@ -1,8 +1,12 @@
 extends Control
 
+onready var score_label = $MarginContainer/VBoxContainer/ScoreAndEnemyCount/Score/ScoreNumber
+onready var noOfEnemies_label = $MarginContainer/VBoxContainer/ScoreAndEnemyCount/NoOfEnemies/NoOfEnemiesNumber
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	score_label.text = str(Global.score)
+	noOfEnemies_label.text = str(Global.no_of_enemies)
 
 
 func _on_Button_pressed():

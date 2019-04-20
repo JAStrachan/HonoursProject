@@ -36,6 +36,8 @@ var Bullet = preload("res://Bullet/PlayerBullet.tscn")
 
 var velocity = Vector2()
 
+signal enemy_death
+
 func _ready():
 	_change_state(STATES.PATROL)
 	# Raycasting a visibiltity /area of dectection was taken from http://kidscancode.org/blog/2018/03/godot3_visibility_raycasts/
@@ -213,3 +215,7 @@ func bullet_hit(bullet_damage):
 	if health - bullet_damage <= 0:
 		# death
 		Global.update_enemy_count()
+		emit_signal("enemy_death", score_to_add)
+		queue_free()
+	else:
+		health = health - bullet_damage
