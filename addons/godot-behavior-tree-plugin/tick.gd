@@ -1,4 +1,4 @@
-extends Node
+# Fix created by https://github.com/jonbonazza in this pull request https://github.com/godot-addons/godot-behavior-tree-plugin/pull/16/commits/31ca9138aa8723f71765aabcf3697a0cd21a4676
 
 #Created by the tree and passed to nodes, this lets nodes know which tree they belong to, and gives them a reference to the blackboard being used for this tick.
 #It also holds the list of currently open nodes

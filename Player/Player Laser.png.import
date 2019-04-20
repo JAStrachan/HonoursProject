@@ -2,18 +2,22 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/BasicEnemy.png-ec351a64b8185c54f8481581b2e91942.stex"
+path="res://.import/Player Laser.png-1c1d5a69e51d1fa3fbf96a8e10b90d1a.stex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
-source_file="res://Enemies/BasicEnemy.png"
-dest_files=[ "res://.import/BasicEnemy.png-ec351a64b8185c54f8481581b2e91942.stex" ]
+source_file="res://Player/Player Laser.png"
+dest_files=[ "res://.import/Player Laser.png-1c1d5a69e51d1fa3fbf96a8e10b90d1a.stex" ]
 
 [params]
 
 compress/mode=0
 compress/lossy_quality=0.7
 compress/hdr_mode=0
+compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=true
@@ -23,6 +27,7 @@ flags/srgb=2
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
+process/invert_color=false
 stream=false
 size_limit=0
 detect_3d=true

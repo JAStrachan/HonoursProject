@@ -4,39 +4,28 @@
 [ext_resource path="res://Player/Player.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
-
-custom_solver_bias = 0.0
-radius = 18.7908
+radius = 12.3688
 
 [node name="Player" type="KinematicBody2D"]
-
-input_pickable = false
-collision_layer = 1
-collision_mask = 1
-collision/safe_margin = 0.08
 script = ExtResource( 1 )
-speed = 200
-health = 100
-max_health = 150
-enemy_physical_attack = 20
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." index="0"]
-
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( -0.429276, 0.643921 )
 shape = SubResource( 1 )
-_sections_unfolded = [ "Transform" ]
 
-[node name="Sprite" type="Sprite" parent="." index="1"]
-
+[node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 2 )
 
-[node name="time_since_last_shot" type="Timer" parent="." index="2"]
-
-process_mode = 1
+[node name="time_since_last_shot" type="Timer" parent="."]
 wait_time = 0.2
-one_shot = false
-autostart = false
+
+[node name="Pivot" type="Position2D" parent="."]
+
+[node name="CameraOffset" type="Position2D" parent="Pivot"]
+position = Vector2( 48, 0 )
+
+[node name="Camera2D" type="Camera2D" parent="Pivot/CameraOffset"]
+position = Vector2( 0, 0.214645 )
+current = true
 
 [connection signal="timeout" from="time_since_last_shot" to="." method="_on_time_since_last_shot_timeout"]
-
-

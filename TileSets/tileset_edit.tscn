@@ -1,62 +1,104 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://TileSets/brickTileset.png" type="Texture" id=1]
+[ext_resource path="res://TileSets/Tileset.png.png" type="Texture" id=1]
+[ext_resource path="res://TileSets/Tileset-1.png.png" type="Texture" id=2]
 
-[node name="Node2D" type="Node2D" index="0"]
+[node name="Tile Set" type="Node2D"]
 
-position = Vector2( 25, 25 )
-
-[node name="Wall" type="Sprite" parent="." index="0"]
-
+[node name="StandaloneWall" type="Sprite" parent="."]
 texture = ExtResource( 1 )
+centered = false
 region_enabled = true
-region_rect = Rect2( 0, 0, 50, 50 )
-_sections_unfolded = [ "Offset", "Region", "Transform" ]
+region_rect = Rect2( 0, 0, 32, 32 )
 
-[node name="StaticBody2D" type="StaticBody2D" parent="Wall" index="0"]
+[node name="StaticBody2D" type="StaticBody2D" parent="StandaloneWall"]
 
-input_pickable = false
-collision_layer = 1
-collision_mask = 1
-constant_linear_velocity = Vector2( 0, 0 )
-constant_angular_velocity = 0.0
-friction = 1.0
-bounce = 0.0
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StandaloneWall/StaticBody2D"]
+polygon = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Wall/StaticBody2D" index="0"]
-
-build_mode = 0
-polygon = PoolVector2Array( -25, -25, 25, -25, 25, 25, -25, 25 )
-
-[node name="WallUp" type="Sprite" parent="." index="1"]
-
+[node name="CornerWall" type="Sprite" parent="."]
+position = Vector2( 32, 0 )
 texture = ExtResource( 1 )
-offset = Vector2( 50, 0 )
+centered = false
 region_enabled = true
-region_rect = Rect2( 50, 0, 50, 50 )
-_sections_unfolded = [ "Offset", "Region", "Transform" ]
+region_rect = Rect2( 32, 0, 32, 32 )
 
-[node name="StaticBody2D" type="StaticBody2D" parent="WallUp" index="0"]
+[node name="StaticBody2D" type="StaticBody2D" parent="CornerWall"]
 
-input_pickable = false
-collision_layer = 1
-collision_mask = 1
-constant_linear_velocity = Vector2( 0, 0 )
-constant_angular_velocity = 0.0
-friction = 1.0
-bounce = 0.0
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CornerWall/StaticBody2D"]
+polygon = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="WallUp/StaticBody2D" index="0"]
-
-build_mode = 0
-polygon = PoolVector2Array( 25, -25, 75, -25, 75, 25, 25, 25 )
-
-[node name="BG_Wall" type="Sprite" parent="." index="2"]
-
+[node name="HorizontalWall" type="Sprite" parent="."]
+position = Vector2( 64, 0 )
 texture = ExtResource( 1 )
-offset = Vector2( 100, 0 )
+centered = false
 region_enabled = true
-region_rect = Rect2( 200, 0, 50, 50 )
-_sections_unfolded = [ "Offset", "Region", "Transform" ]
+region_rect = Rect2( 64, 0, 32, 32 )
 
+[node name="StaticBody2D" type="StaticBody2D" parent="HorizontalWall"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HorizontalWall/StaticBody2D"]
+polygon = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
+
+[node name="HorizontalWall2Sides" type="Sprite" parent="."]
+position = Vector2( 96, 0 )
+texture = ExtResource( 1 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 0, 32, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="HorizontalWall2Sides"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HorizontalWall2Sides/StaticBody2D"]
+polygon = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
+
+[node name="InnerCornerWall" type="Sprite" parent="."]
+position = Vector2( 128, 0 )
+texture = ExtResource( 1 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 128, 0, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="InnerCornerWall"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="InnerCornerWall/StaticBody2D"]
+polygon = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
+
+[node name="EndOfWall" type="Sprite" parent="."]
+position = Vector2( 128, 0 )
+texture = ExtResource( 1 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 32, 32, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="EndOfWall"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="EndOfWall/StaticBody2D"]
+polygon = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
+
+[node name="CornerWithEdge" type="Sprite" parent="."]
+position = Vector2( 160, 0 )
+texture = ExtResource( 1 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 64, 32, 32, 32 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="CornerWithEdge"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CornerWithEdge/StaticBody2D"]
+polygon = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
+
+[node name="Background" type="Sprite" parent="."]
+position = Vector2( 192, 0 )
+texture = ExtResource( 1 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 96, 0, 32, 32 )
+
+[node name="WallBackground" type="Sprite" parent="."]
+position = Vector2( 224, 0 )
+texture = ExtResource( 2 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 96, 32, 32, 32 )
 
