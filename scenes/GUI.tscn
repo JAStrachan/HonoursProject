@@ -93,6 +93,7 @@ custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_shadow = Color( 0.960784, 0.0156863, 0.0156863, 1 )
 text = "Score"
 valign = 1
+uppercase = true
 
 [node name="ScoreValue" type="Label" parent="HBoxContainer/HBoxContainer2/ScoreUI/Background"]
 margin_left = 150.0

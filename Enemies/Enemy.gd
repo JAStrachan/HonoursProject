@@ -208,3 +208,8 @@ func _draw():
 # Time in between shots
 func _on_time_since_last_shot_timeout():
 	can_shoot = true
+	
+func bullet_hit(bullet_damage):
+	if health - bullet_damage <= 0:
+		# death
+		Global.update_enemy_count()

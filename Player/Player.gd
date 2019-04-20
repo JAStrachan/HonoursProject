@@ -97,8 +97,9 @@ func hit(damage):
 func death():
 	emit_signal("death")
 	emit_signal('health_changed', 0)
-	queue_free()
+	Global._deferred_goto_scene("res://scenes/DeathMenu.tscn")
 
 func _on_Enemy_enemy_death(add_to_score):
 	score = score + add_to_score
+	Global.update_score(add_to_score)
 	emit_signal('score_changed', score)
