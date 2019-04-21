@@ -12,11 +12,11 @@ export (bool) var can_shoot = true
 export (int) var score_to_add = 20
 
 # IDLE is when the npc is just sitting around. Will every so often become idle when patrolling
-# FOLLOW is when the npc is actively following a threat
+# TRACKING is when the npc is actively following a threat
 # PATROL is the npc is patrolling the map following a path
-# FOUNDSPOT is when npc has got in close to a threat and found a spot to fire upon LINE OF SIGHT
-# TRACKING is when npc is following a threat and has a line of sight on it
-enum STATES { IDLE, FOLLOW, PATROL, FOUNDSPOT, TRACKING}
+# RANGED_ATTACK is when npc has got in close to a threat and found a spot to fire upon LINE OF SIGHT
+# CHASE is when npc is following a threat and has a line of sight on it
+enum STATES { IDLE, TRACKING, PATROL, RANGED_ATTACK, CHASE}
 var _state = null
 
 var raycast_hit_pos = [] # the positions the raycasts have hit
@@ -46,11 +46,11 @@ func _ready():
 	$AreaDetection/CollisionShape2D.shape = shape
 
 func _change_state(new_state):
-	if new_state == STATES.FOLLOW:
+	if new_state == STATES.TRACKING:
 		# Calculates path in the physics_process
 		detection_area_colour = Color(0,1,0,0.1) # green
 		
-	if new_state == STATES.TRACKING:
+	if new_state == STATES.CHASE:
 		# Calculates path in the physics_process
 		detection_area_colour = Color(1,0,0,0.1) # red
 		
@@ -58,7 +58,7 @@ func _change_state(new_state):
 		velocity = Vector2(0,0)
 		detection_area_colour = Color(.867, .91, .247, 0.1) # yellow
 	
-	if new_state == STATES.FOUNDSPOT:
+	if new_state == STATES.RANGED_ATTACK:
 		velocity = Vector2(0,0)
 		detection_area_colour = Color(0, 0.764, 0.819,0.1) # cyan-ish
 		
@@ -76,24 +76,24 @@ func _process(delta):
 
 func _physics_process(delta):
 	
-	if _state == STATES.FOUNDSPOT:
+	if _state == STATES.RANGED_ATTACK:
 		# Switch back to following threat if it is far away enough
 		var distanceToTarget = self.position.distance_to(target.position)
 		if distanceToTarget > DISTANCE_FROM_THREAT + 10 or not enemy_line_of_sight :
-			_change_state(STATES.FOLLOW)
-		elif distanceToTarget > DISTANCE_FROM_THREAT + 10 and enemy_line_of_sight :
 			_change_state(STATES.TRACKING)
+		elif distanceToTarget > DISTANCE_FROM_THREAT + 10 and enemy_line_of_sight :
+			_change_state(STATES.CHASE)
 			
-	if _state == STATES.FOLLOW or _state == STATES.TRACKING:
+	if _state == STATES.TRACKING or _state == STATES.CHASE:
 		path = get_parent().get_node('/root/Map/TileMap').get_world_path(self.position, target.position)
 		target_point_world = path[1]
 		if enemy_line_of_sight:
-			_change_state(STATES.TRACKING)
+			_change_state(STATES.CHASE)
 			
 	# if it is attacking do
-	if _state == STATES.FOLLOW or _state == STATES.FOUNDSPOT or _state == STATES.TRACKING:
+	if _state == STATES.TRACKING or _state == STATES.RANGED_ATTACK or _state == STATES.CHASE:
 		detect_enemies() # determines which way the character faces if line of sight can be achieved
-		if _state == STATES.FOLLOW or _state == STATES.TRACKING:
+		if _state == STATES.TRACKING or _state == STATES.CHASE:
 			var arrived_to_next_point = move_to(target_point_world)
 			if arrived_to_next_point:
 				# moving through the path points
@@ -102,18 +102,18 @@ func _physics_process(delta):
 					# if it is at the end of it's path
 					if len(path) == 0:
 						if enemy_line_of_sight:
-							_change_state(STATES.FOUNDSPOT)
+							_change_state(STATES.RANGED_ATTACK)
 						else:
 							_change_state(STATES.IDLE)
 						return
 					target_point_world = path[0]
 		
-		if _state == STATES.FOUNDSPOT or _state == STATES.TRACKING:
+		if _state == STATES.RANGED_ATTACK or _state == STATES.CHASE:
 			shoot()
 		
 		var distanceToTarget = self.position.distance_to(target.position)
-		if distanceToTarget < DISTANCE_FROM_THREAT and not _state == STATES.FOUNDSPOT  :
-			_change_state(STATES.FOUNDSPOT)
+		if distanceToTarget < DISTANCE_FROM_THREAT and not _state == STATES.RANGED_ATTACK  :
+			_change_state(STATES.RANGED_ATTACK)
 	
 	rotate(rotation * delta) # rotates the character independant of its movement
 	
@@ -154,7 +154,7 @@ func detect_enemies():
 				# Changes state to follow the threat
 				enemy_line_of_sight = true
 				rotation = (target.position - position).angle()
-				#_change_state(STATES.FOLLOW)
+				#_change_state(STATES.TRACKING)
 				break
 				
 # Shoots in the direction it is facing in
@@ -173,7 +173,7 @@ func _on_AreaDetection_body_entered(body):
 	if body.name == "Player": 
 		target = body
 		
-		_change_state(STATES.FOLLOW)
+		_change_state(STATES.TRACKING)
 		
 	if target == body and $PeriodOfMemory.get_time_left() > 0:
 		$PeriodOfMemory.stop()
