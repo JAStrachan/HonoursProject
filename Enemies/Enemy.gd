@@ -8,7 +8,7 @@ export(float) var MASS = 10.0
 export(int) var DISTANCE_FROM_THREAT = 100 # how far from the player or the threat it should be
 export (int) var health = 100
 export (int) var totalHealth = 100
-var healthLow
+var healthLow = false
 export (int) var vision_distance = 150
 export (bool) var can_shoot = true
 export (int) var score_to_add = 20
@@ -40,7 +40,7 @@ var velocity = Vector2()
 
 signal enemy_death
 
-onready var blackboard = get_node("/root/Map/BehaviorBlackboard")
+onready var blackboard = get_node("/root/Map/Blackboard")
 onready var behaviourTree = get_node('/root/Map/MediumEnemy')
 
 func _ready():
@@ -81,9 +81,9 @@ func _process(delta):
 
 func _physics_process(delta):
 	if blackboard and behaviourTree:
+		if target:
+			blackboard.set("target", target, behaviourTree)
 		behaviourTree.tick(self, blackboard)
-	
-	
 	
 	if _state == STATES.RANGED_ATTACK:
 		# Switch back to following threat if it is far away enough
@@ -165,7 +165,7 @@ func detect_enemies():
 				rotation = (target.position - position).angle()
 				#_change_state(STATES.TRACKING)
 				break
-				
+	return enemy_line_of_sight
 # Shoots in the direction it is facing in
 func shoot():
 	if can_shoot:

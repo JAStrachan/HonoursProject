@@ -1,10 +1,6 @@
 extends "res://addons/godot-behavior-tree-plugin/action.gd"
 
-func open(tick):
-	pass
-	
+# Behaviour for running away from player
+
 func tick(tick):
 	return OK
-
-func close(tick):
-	queue_free()
