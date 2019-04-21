@@ -7,6 +7,8 @@ export(float) var SPEED = 150.0
 export(float) var MASS = 10.0
 export(int) var DISTANCE_FROM_THREAT = 100 # how far from the player or the threat it should be
 export (int) var health = 100
+export (int) var totalHealth = 100
+var healthLow
 export (int) var vision_distance = 150
 export (bool) var can_shoot = true
 export (int) var score_to_add = 20
@@ -16,7 +18,7 @@ export (int) var score_to_add = 20
 # PATROL is the npc is patrolling the map following a path
 # RANGED_ATTACK is when npc has got in close to a threat and found a spot to fire upon LINE OF SIGHT
 # CHASE is when npc is following a threat and has a line of sight on it
-enum STATES { IDLE, TRACKING, PATROL, RANGED_ATTACK, CHASE}
+enum STATES { IDLE, TRACKING, PATROL, RANGED_ATTACK, CHASE, RUN}
 var _state = null
 
 var raycast_hit_pos = [] # the positions the raycasts have hit
@@ -37,6 +39,9 @@ var Bullet = preload("res://Bullet/PlayerBullet.tscn")
 var velocity = Vector2()
 
 signal enemy_death
+
+onready var blackboard = get_node("/root/Map/BehaviorBlackboard")
+onready var behaviourTree = get_node('/root/Map/MediumEnemy')
 
 func _ready():
 	_change_state(STATES.PATROL)
@@ -75,6 +80,10 @@ func _process(delta):
 	
 
 func _physics_process(delta):
+	if blackboard and behaviourTree:
+		behaviourTree.tick(self, blackboard)
+	
+	
 	
 	if _state == STATES.RANGED_ATTACK:
 		# Switch back to following threat if it is far away enough
@@ -219,3 +228,10 @@ func bullet_hit(bullet_damage):
 		queue_free()
 	else:
 		health = health - bullet_damage
+		if health < totalHealth/2:
+			healthLow = true
+
+func heal(healthToAdd):
+	health += healthToAdd
+	if health > totalHealth/2:
+		healthLow = false
