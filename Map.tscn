@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://addons/godot-behavior-tree-plugin/behavior_tree.gd" type="Script" id=1]
 [ext_resource path="res://addons/godot-behavior-tree-plugin/root_icon.png" type="Texture" id=2]
@@ -21,7 +21,8 @@
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=19]
 [ext_resource path="res://scenes/GUI.tscn" type="PackedScene" id=20]
 [ext_resource path="res://powerups/HealthBoost.tscn" type="PackedScene" id=21]
-[ext_resource path="res://Enemies/BasicEnemy.tscn" type="PackedScene" id=22]
+[ext_resource path="res://Enemies/LargeEnemy.tscn" type="PackedScene" id=22]
+[ext_resource path="res://Enemies/SmallEnemy.tscn" type="PackedScene" id=23]
 
 [node name="Map" type="Node"]
 
@@ -32,6 +33,7 @@ __meta__ = {
 }
 
 [node name="BehaviorSelector" type="Node" parent="MediumEnemy"]
+editor/display_folded = true
 script = ExtResource( 3 )
 __meta__ = {
 "_editor_icon": ExtResource( 4 )
@@ -109,21 +111,110 @@ position = Vector2( 96, 304 )
 [node name="HealthBoost" parent="." instance=ExtResource( 21 )]
 position = Vector2( 144, 128 )
 
-[node name="Enemy" parent="." instance=ExtResource( 22 )]
-position = Vector2( 256, 336 )
-
 [node name="LargeEnemyTree" type="Node" parent="."]
+editor/display_folded = true
 script = ExtResource( 1 )
 __meta__ = {
 "_editor_icon": ExtResource( 2 )
+}
+
+[node name="BehaviorSelector" type="Node" parent="LargeEnemyTree"]
+script = ExtResource( 3 )
+__meta__ = {
+"_editor_icon": ExtResource( 4 )
+}
+
+[node name="HealthLow" type="Node" parent="LargeEnemyTree/BehaviorSelector"]
+editor/display_folded = true
+script = ExtResource( 5 )
+__meta__ = {
+"_editor_icon": ExtResource( 6 )
+}
+
+[node name="IsHealthLow" type="Node" parent="LargeEnemyTree/BehaviorSelector/HealthLow"]
+script = ExtResource( 7 )
+__meta__ = {
+"_editor_icon": ExtResource( 8 )
+}
+
+[node name="RunAway" type="Node" parent="LargeEnemyTree/BehaviorSelector/HealthLow"]
+script = ExtResource( 9 )
+__meta__ = {
+"_editor_icon": ExtResource( 10 )
+}
+
+[node name="AttackThreat" type="Node" parent="LargeEnemyTree/BehaviorSelector"]
+script = ExtResource( 5 )
+__meta__ = {
+"_editor_icon": ExtResource( 6 )
+}
+
+[node name="ThreatDetected" type="Node" parent="LargeEnemyTree/BehaviorSelector/AttackThreat"]
+script = ExtResource( 11 )
+__meta__ = {
+"_editor_icon": ExtResource( 8 )
+}
+
+[node name="MoveTowardsThreat" type="Node" parent="LargeEnemyTree/BehaviorSelector/AttackThreat"]
+script = ExtResource( 12 )
+__meta__ = {
+"_editor_icon": ExtResource( 10 )
+}
+
+[node name="Shoot" type="Node" parent="LargeEnemyTree/BehaviorSelector/AttackThreat"]
+script = ExtResource( 13 )
+__meta__ = {
+"_editor_icon": ExtResource( 10 )
+}
+
+[node name="Patrol" type="Node" parent="LargeEnemyTree/BehaviorSelector"]
+script = ExtResource( 14 )
+__meta__ = {
+"_editor_icon": ExtResource( 10 )
 }
 
 [node name="SmallEnemyTree" type="Node" parent="."]
+editor/display_folded = true
 script = ExtResource( 1 )
 __meta__ = {
 "_editor_icon": ExtResource( 2 )
 }
 
+[node name="BehaviorSelector" type="Node" parent="SmallEnemyTree"]
+script = ExtResource( 3 )
+__meta__ = {
+"_editor_icon": ExtResource( 4 )
+}
+
+[node name="AttackThreat" type="Node" parent="SmallEnemyTree/BehaviorSelector"]
+script = ExtResource( 5 )
+__meta__ = {
+"_editor_icon": ExtResource( 6 )
+}
+
+[node name="ThreatDetected" type="Node" parent="SmallEnemyTree/BehaviorSelector/AttackThreat"]
+script = ExtResource( 11 )
+__meta__ = {
+"_editor_icon": ExtResource( 8 )
+}
+
+[node name="MoveTowardsThreat" type="Node" parent="SmallEnemyTree/BehaviorSelector/AttackThreat"]
+script = ExtResource( 12 )
+__meta__ = {
+"_editor_icon": ExtResource( 10 )
+}
+
+[node name="Patrol" type="Node" parent="SmallEnemyTree/BehaviorSelector"]
+script = ExtResource( 14 )
+__meta__ = {
+"_editor_icon": ExtResource( 10 )
+}
+
+[node name="LargeEnemy3" parent="." instance=ExtResource( 22 )]
+position = Vector2( 688, 368 )
+
+[node name="SmallEnemy" parent="." instance=ExtResource( 23 )]
+position = Vector2( 240, 392 )
+
 [connection signal="health_changed" from="Player" to="CanvasLayer/GUI" method="_on_Player_health_changed"]
 [connection signal="score_changed" from="Player" to="CanvasLayer/GUI" method="_on_Player_score_changed"]
-[connection signal="enemy_death" from="Enemy" to="Player" method="_on_Enemy_enemy_death"]

@@ -28,7 +28,5 @@ one_shot = true
 [node name="time_since_last_shot" type="Timer" parent="."]
 wait_time = 0.7
 
-[connection signal="body_entered" from="AreaDetection" to="." method="_on_AreaDetection_body_entered"]
-[connection signal="body_exited" from="AreaDetection" to="." method="_on_AreaDetection_body_exited"]
 [connection signal="timeout" from="PeriodOfMemory" to="." method="_on_PeriodOfMemory_timeout"]
 [connection signal="timeout" from="time_since_last_shot" to="." method="_on_time_since_last_shot_timeout"]

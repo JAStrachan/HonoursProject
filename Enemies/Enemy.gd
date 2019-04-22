@@ -12,8 +12,7 @@ var healthLow = false
 export (int) var vision_distance = 150
 export (bool) var can_shoot = true
 export (int) var score_to_add = 20
-
-var _state = null
+export (String) var behaviourTreePath = '/root/Map/MediumEnemy'
 
 var raycast_hit_pos = [] # the positions the raycasts have hit
 
@@ -34,15 +33,22 @@ var velocity = Vector2()
 
 signal enemy_death
 
+
 onready var blackboard = get_node("/root/Map/Blackboard")
-onready var behaviourTree = get_node('/root/Map/MediumEnemy')
+onready var behaviourTree = get_node(behaviourTreePath)
 
 func _ready():
 	# Raycasting a visibiltity /area of dectection was taken from http://kidscancode.org/blog/2018/03/godot3_visibility_raycasts/
 	var shape = CircleShape2D.new()
 	shape.radius = vision_distance
 	$AreaDetection/CollisionShape2D.shape = shape
+	
+	$AreaDetection.connect("body_entered", self, "_on_AreaDetection_body_entered")
+	$AreaDetection.connect("body_exited", self, "_on_AreaDetection_body_exited")
 
+func _on_ready():
+	# Used to adjust child classes variables
+	behaviourTreePath = '/root/Map/MediumEnemy'
 
 func _process(delta):
 	update() # Used to add the drawing of the debugging behaviour

@@ -1,13 +1,27 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Enemies/BasicEnemy.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Enemies/LargeEnemy.png.png" type="Texture" id=2]
+[ext_resource path="res://Enemies/LargeEnemy.gd" type="Script" id=2]
+[ext_resource path="res://Enemies/LargeEnemy.png.png" type="Texture" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 20.1761
 
 [node name="LargeEnemy" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+SPEED = 120.0
+MASS = 20.0
+DISTANCE_FROM_THREAT = 130
+health = 150
+totalHealth = 200
+vision_distance = 180
+score_to_add = 50
+behaviourTreePath = "/root/Map/LargeEnemyTree"
 
 [node name="Sprite" parent="." index="0"]
-texture = ExtResource( 2 )
+texture = ExtResource( 3 )
 
 [node name="CollisionShape2D" parent="." index="1"]
 position = Vector2( 0.429276, 0.643913 )
+shape = SubResource( 1 )
 
