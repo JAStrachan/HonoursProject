@@ -4,7 +4,7 @@
 [ext_resource path="res://Enemies/Medium Enemy.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 14.3809
+radius = 14.176
 
 [node name="Enemy" type="KinematicBody2D"]
 collision_mask = 3

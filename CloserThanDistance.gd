@@ -9,6 +9,6 @@ func tick(tick):
 	var distanceToTarget = tick.actor.position.distance_to(target.position)
 	
 	if distanceToTarget > DISTANCE_FROM_THREAT + 10 or not line_of_sight:
-		return OK #goes to ranged attack action
+		return FAILED #goes to chase action
 	else:
-		return FAILED # goes to chase actiona
+		return OK # goes to ranged attack  action

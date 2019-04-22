@@ -137,17 +137,15 @@ func moving_through_path():
 			path.remove(0)
 			# if it is at the end of it's path
 			if len(path) == 0:
-				pass
-#				if enemy_line_of_sight:
-#					_change_state(STATES.RANGED_ATTACK)
-#				else:
-#					_change_state(STATES.IDLE)
-#				return
+				stop_movement()
 			target_point_world = path[0]
 
 func get_world_path():
 	path = get_parent().get_node('/root/Map/TileMap').get_world_path(self.position, target.position)
 	target_point_world = path[1]
+	
+func stop_movement():
+	velocity = Vector2(0,0)
 	
 # Used for detecting any threats to itself via raycasting
 # Taken from http://kidscancode.org/blog/2018/03/godot3_visibility_raycasts/
@@ -203,6 +201,7 @@ func _on_AreaDetection_body_exited(body):
 func _on_PeriodOfMemory_timeout():
 	#_change_state(STATES.PATROL)
 	target = null
+	blackboard.set("target", target, behaviourTree)
 
 func _draw():
     # display the visibility area
