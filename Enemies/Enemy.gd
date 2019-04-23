@@ -179,7 +179,15 @@ func _on_time_since_last_shot_timeout():
 func bullet_hit(bullet_damage):
 	if health - bullet_damage <= 0:
 		# death
-		Global.update_enemy_count()
+		Global.update_enemy_death_count()
+		
+		if self.is_class("MediumEnemy"):
+			Global.mediumEnemyCount -= 1
+		elif self.is_class("SmallEnemy"):
+			Global.smallEnemyCount -= 1
+		elif self.is_class("LargeEnemy"):
+			Global.largeEnemyCount -= 1
+		
 		emit_signal("enemy_death", score_to_add)
 		queue_free()
 	else:

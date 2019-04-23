@@ -3,7 +3,11 @@ extends Node
 # Holds golbal variables and allows loading of scenes
 
 var score = 0
-var no_of_enemies = 0
+var no_of_dead_enemies = 0
+
+var largeEnemyCount = 0
+var smallEnemyCount = 0
+var mediumEnemyCount = 0
 var current_scene = null
 
 func _ready():
@@ -45,8 +49,8 @@ func update_score(number_to_add):
 func reset_score():
 	score = 0
 	
-func update_enemy_count():
-	no_of_enemies += 1
+func update_enemy_death_count():
+	no_of_dead_enemies += 1
 
 func reset_enemy_count():
-	no_of_enemies = 0
+	no_of_dead_enemies = 0

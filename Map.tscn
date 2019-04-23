@@ -105,6 +105,7 @@ script = ExtResource( 19 )
 
 [node name="Player" parent="." instance=ExtResource( 20 )]
 position = Vector2( 96, 304 )
+rotation = -1.11654
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
