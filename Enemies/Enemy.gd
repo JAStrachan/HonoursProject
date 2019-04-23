@@ -43,12 +43,13 @@ func _ready():
 	shape.radius = vision_distance
 	$AreaDetection/CollisionShape2D.shape = shape
 	
+	add_to_group("enemies")
+	
 	$AreaDetection.connect("body_entered", self, "_on_AreaDetection_body_entered")
 	$AreaDetection.connect("body_exited", self, "_on_AreaDetection_body_exited")
-
-func _on_ready():
-	# Used to adjust child classes variables
-	behaviourTreePath = '/root/Map/MediumEnemy'
+	
+func spawn(pos):
+	position = pos
 
 func _process(delta):
 	update() # Used to add the drawing of the debugging behaviour
@@ -100,7 +101,6 @@ func stop_movement():
 # Used for detecting any threats to itself via raycasting
 # Taken from http://kidscancode.org/blog/2018/03/godot3_visibility_raycasts/
 func detect_enemies():
-	
 	raycast_hit_pos = []
 	var space_state = get_world_2d().direct_space_state
 	var radius = 16

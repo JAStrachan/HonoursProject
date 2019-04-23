@@ -88,7 +88,6 @@ func heal(health_boost):
 
 func hit(damage):
 	if health - damage <=0:
-
 		death()
 	else:
 		health = health - damage
