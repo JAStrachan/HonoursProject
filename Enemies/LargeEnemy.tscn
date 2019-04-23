@@ -4,7 +4,6 @@
 [ext_resource path="res://Enemies/LargeEnemy.gd" type="Script" id=2]
 [ext_resource path="res://Enemies/LargeEnemy.png.png" type="Texture" id=3]
 
-
 [sub_resource type="CircleShape2D" id=1]
 radius = 20.1761
 

@@ -4,5 +4,5 @@ extends "res://addons/godot-behavior-tree-plugin/action.gd"
 
 func tick(tick):
 	tick.actor.detection_area_colour = Color(0.5,0.5,0.5,0.1) # not red
-	tick.actor.stopMovement()
+	tick.actor.stop_movement()
 	return OK

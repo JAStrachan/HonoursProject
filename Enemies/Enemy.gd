@@ -56,6 +56,8 @@ func _process(delta):
 	#pass
 
 func _physics_process(delta):
+	var blackBoardTarget = blackboard.get("target", behaviourTree, self)
+	
 	if blackboard and behaviourTree:
 		if target:
 			get_world_path()
@@ -138,6 +140,7 @@ func _on_AreaDetection_body_entered(body):
 	# need to add this condition so it does other enemy types as well
 	if body.name == "Player": 
 		target = body
+		blackboard.set("target", target, behaviourTree, self)
 		
 	if target == body and $PeriodOfMemory.get_time_left() > 0:
 		$PeriodOfMemory.stop()
@@ -149,7 +152,7 @@ func _on_AreaDetection_body_exited(body):
 # For how long it can track a threat for once it is out of it's vision
 func _on_PeriodOfMemory_timeout():
 	target = null
-	blackboard.set("target", target, behaviourTree)
+	blackboard.set("target", target, behaviourTree, self)
 
 func _draw():
     # display the visibility area

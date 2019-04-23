@@ -18,7 +18,6 @@ func tick(tick):
 		tick.actor.stop_movement() # goes to ranged attack state
 		tick.actor.detection_area_colour = Color(0, 0.764, 0.819,0.1) # cyan-ish
 		
-	
 	return OK
 	
 	

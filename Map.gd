@@ -14,26 +14,26 @@ func _ready():
 	spawnEnemies(spawnableLocations)
 	
 func spawnEnemies(spawnableLocations):
-	
-	var enemy = chooseEnemyToSpawn()
-	if not enemy:
-		return
-	
-	var spawned = false
-	var noOfTrys = 0
-	while noOfTrys < spawnableLocations.size() and spawned == false:
-		noOfTrys += 1
-		randomize()
-		var random_number = rand_range(0, spawnableLocations.size()-1)
-		random_number = round(random_number)
-		# to get it in the center of the spawning tile
-		var spawnLocation = Vector2(spawnableLocations[random_number].x + 16, spawnableLocations[random_number].y + 16)
-		var listOfObjectPositions = getListOfObjectPositions()
-		if isLocationIsClear(spawnLocation, listOfObjectPositions):
-			enemy.spawn(spawnLocation)
-			add_child(enemy)
-			spawned = true
-	$SpawnTimer.start()
+	pass
+#	var enemy = chooseEnemyToSpawn()
+#	if not enemy:
+#		return
+#
+#	var spawned = false
+#	var noOfTrys = 0
+#	while noOfTrys < spawnableLocations.size() and spawned == false:
+#		noOfTrys += 1
+#		randomize()
+#		var random_number = rand_range(0, spawnableLocations.size()-1)
+#		random_number = round(random_number)
+#		# to get it in the center of the spawning tile
+#		var spawnLocation = Vector2(spawnableLocations[random_number].x + 16, spawnableLocations[random_number].y + 16)
+#		var listOfObjectPositions = getListOfObjectPositions()
+#		if isLocationIsClear(spawnLocation, listOfObjectPositions):
+#			enemy.spawn(spawnLocation)
+#			add_child(enemy)
+#			spawned = true
+#	$SpawnTimer.start()
 	
 func chooseEnemyToSpawn():
 	var enemy
