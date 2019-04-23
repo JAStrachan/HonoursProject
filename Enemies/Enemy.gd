@@ -59,8 +59,8 @@ func _physics_process(delta):
 	if blackboard and behaviourTree:
 		if target:
 			get_world_path()
-			blackboard.set("target", target, behaviourTree)
-			blackboard.set("distance_from_threat", DISTANCE_FROM_THREAT, behaviourTree)
+			blackboard.set("target", target, behaviourTree, self)
+			blackboard.set("distance_from_threat", DISTANCE_FROM_THREAT, behaviourTree, self)
 		behaviourTree.tick(self, blackboard)
 	
 	rotate(rotation * delta) # rotates the character independant of its movement
@@ -93,7 +93,10 @@ func moving_through_path():
 
 func get_world_path():
 	path = get_parent().get_node('/root/Map/TileMap').get_world_path(self.position, target.position)
-	target_point_world = path[1]
+	if path.size() > 1:
+		target_point_world = path[1]
+	else:
+		pass
 	
 func stop_movement():
 	velocity = Vector2(0,0)

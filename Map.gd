@@ -10,7 +10,7 @@ var spawnableLocations
 
 func _ready():
 	spawnableLocations = $TileMap.getSpawnLocations()
-	spawnEnemies(spawnableLocations)
+	#spawnEnemies(spawnableLocations)
 	
 func spawnEnemies(spawnableLocations):
 	var mediumEnemy = MediumEnemy.instance()
@@ -27,14 +27,15 @@ func spawnEnemies(spawnableLocations):
 	$SpawnTimer.start()
 	
 func isLocationIsClear(location: Vector2, listOfObjectPositions):
+	var clear = false
 	for position in listOfObjectPositions:
-		if position.x < location.x + 32 and position > location.x - 32:
-			return false
-		elif position.y < location.y + 32 and position > location.y - 32:
+		# Is there a object within 32 pixels of the middle of the tile
+		if position.x < location.x + 32 and position.y < location.y + 32 and position.x > location.x - 32 and position.y > location.y - 32:
 			return false
 		else:
-			return true
-			
+			clear = true
+	return clear
+	
 func getListOfObjectPositions():
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	
@@ -45,4 +46,4 @@ func getListOfObjectPositions():
 	return listOfObjctPositions
 
 func _on_SpawnTimer_timeout():
-	pass
+	spawnEnemies(spawnableLocations)

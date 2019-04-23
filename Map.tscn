@@ -219,6 +219,8 @@ position = Vector2( 688, 368 )
 position = Vector2( 240, 392 )
 
 [node name="SpawnTimer" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
 
 [connection signal="health_changed" from="Player" to="CanvasLayer/GUI" method="_on_Player_health_changed"]
 [connection signal="score_changed" from="Player" to="CanvasLayer/GUI" method="_on_Player_score_changed"]
