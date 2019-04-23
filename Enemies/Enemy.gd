@@ -8,18 +8,11 @@ export(float) var MASS = 10.0
 export(int) var DISTANCE_FROM_THREAT = 100 # how far from the player or the threat it should be
 export (int) var health = 100
 export (int) var totalHealth = 100
-var healthLow
+var healthLow = false
 export (int) var vision_distance = 150
 export (bool) var can_shoot = true
 export (int) var score_to_add = 20
-
-# IDLE is when the npc is just sitting around. Will every so often become idle when patrolling
-# TRACKING is when the npc is actively following a threat
-# PATROL is the npc is patrolling the map following a path
-# RANGED_ATTACK is when npc has got in close to a threat and found a spot to fire upon LINE OF SIGHT
-# CHASE is when npc is following a threat and has a line of sight on it
-enum STATES { IDLE, TRACKING, PATROL, RANGED_ATTACK, CHASE, RUN}
-var _state = null
+export (String) var behaviourTreePath = '/root/Map/MediumEnemy'
 
 var raycast_hit_pos = [] # the positions the raycasts have hit
 
@@ -40,89 +33,34 @@ var velocity = Vector2()
 
 signal enemy_death
 
-onready var blackboard = get_node("/root/Map/BehaviorBlackboard")
-onready var behaviourTree = get_node('/root/Map/MediumEnemy')
+
+onready var blackboard = get_node("/root/Map/Blackboard")
+onready var behaviourTree = get_node(behaviourTreePath)
 
 func _ready():
-	_change_state(STATES.PATROL)
 	# Raycasting a visibiltity /area of dectection was taken from http://kidscancode.org/blog/2018/03/godot3_visibility_raycasts/
 	var shape = CircleShape2D.new()
 	shape.radius = vision_distance
 	$AreaDetection/CollisionShape2D.shape = shape
-
-func _change_state(new_state):
-	if new_state == STATES.TRACKING:
-		# Calculates path in the physics_process
-		detection_area_colour = Color(0,1,0,0.1) # green
-		
-	if new_state == STATES.CHASE:
-		# Calculates path in the physics_process
-		detection_area_colour = Color(1,0,0,0.1) # red
-		
-	if new_state == STATES.IDLE:
-		velocity = Vector2(0,0)
-		detection_area_colour = Color(.867, .91, .247, 0.1) # yellow
 	
-	if new_state == STATES.RANGED_ATTACK:
-		velocity = Vector2(0,0)
-		detection_area_colour = Color(0, 0.764, 0.819,0.1) # cyan-ish
-		
-	## TODO add proper patrolling behaviour
-	if new_state == STATES.PATROL:
-		velocity = Vector2(0,0)
-		detection_area_colour = Color(.867, .91, .247, 0.1) # yellow
-		
-	_state = new_state
+	$AreaDetection.connect("body_entered", self, "_on_AreaDetection_body_entered")
+	$AreaDetection.connect("body_exited", self, "_on_AreaDetection_body_exited")
+
+func _on_ready():
+	# Used to adjust child classes variables
+	behaviourTreePath = '/root/Map/MediumEnemy'
 
 func _process(delta):
 	update() # Used to add the drawing of the debugging behaviour
 	#pass
-	
 
 func _physics_process(delta):
 	if blackboard and behaviourTree:
+		if target:
+			get_world_path()
+			blackboard.set("target", target, behaviourTree)
+			blackboard.set("distance_from_threat", DISTANCE_FROM_THREAT, behaviourTree)
 		behaviourTree.tick(self, blackboard)
-	
-	
-	
-	if _state == STATES.RANGED_ATTACK:
-		# Switch back to following threat if it is far away enough
-		var distanceToTarget = self.position.distance_to(target.position)
-		if distanceToTarget > DISTANCE_FROM_THREAT + 10 or not enemy_line_of_sight :
-			_change_state(STATES.TRACKING)
-		elif distanceToTarget > DISTANCE_FROM_THREAT + 10 and enemy_line_of_sight :
-			_change_state(STATES.CHASE)
-			
-	if _state == STATES.TRACKING or _state == STATES.CHASE:
-		path = get_parent().get_node('/root/Map/TileMap').get_world_path(self.position, target.position)
-		target_point_world = path[1]
-		if enemy_line_of_sight:
-			_change_state(STATES.CHASE)
-			
-	# if it is attacking do
-	if _state == STATES.TRACKING or _state == STATES.RANGED_ATTACK or _state == STATES.CHASE:
-		detect_enemies() # determines which way the character faces if line of sight can be achieved
-		if _state == STATES.TRACKING or _state == STATES.CHASE:
-			var arrived_to_next_point = move_to(target_point_world)
-			if arrived_to_next_point:
-				# moving through the path points
-				if len(path) != 0:
-					path.remove(0)
-					# if it is at the end of it's path
-					if len(path) == 0:
-						if enemy_line_of_sight:
-							_change_state(STATES.RANGED_ATTACK)
-						else:
-							_change_state(STATES.IDLE)
-						return
-					target_point_world = path[0]
-		
-		if _state == STATES.RANGED_ATTACK or _state == STATES.CHASE:
-			shoot()
-		
-		var distanceToTarget = self.position.distance_to(target.position)
-		if distanceToTarget < DISTANCE_FROM_THREAT and not _state == STATES.RANGED_ATTACK  :
-			_change_state(STATES.RANGED_ATTACK)
 	
 	rotate(rotation * delta) # rotates the character independant of its movement
 	
@@ -140,7 +78,25 @@ func move_to(world_position):
 	if not enemy_line_of_sight:
 		rotation = velocity.angle()
 	return position.distance_to(world_position) < ARRIVE_DISTANCE
+	
+func moving_through_path():
+	var arrived_to_next_point = move_to(target_point_world)
+	if arrived_to_next_point:
+	# moving through the path points
+		if len(path) != 0:
+			path.remove(0)
+			# if it is at the end of it's path
+			if len(path) == 0:
+				stop_movement()
+			target_point_world = path[0]
 
+func get_world_path():
+	path = get_parent().get_node('/root/Map/TileMap').get_world_path(self.position, target.position)
+	target_point_world = path[1]
+	
+func stop_movement():
+	velocity = Vector2(0,0)
+	
 # Used for detecting any threats to itself via raycasting
 # Taken from http://kidscancode.org/blog/2018/03/godot3_visibility_raycasts/
 func detect_enemies():
@@ -163,9 +119,8 @@ func detect_enemies():
 				# Changes state to follow the threat
 				enemy_line_of_sight = true
 				rotation = (target.position - position).angle()
-				#_change_state(STATES.TRACKING)
-				break
-				
+				return enemy_line_of_sight
+	
 # Shoots in the direction it is facing in
 func shoot():
 	if can_shoot:
@@ -182,8 +137,6 @@ func _on_AreaDetection_body_entered(body):
 	if body.name == "Player": 
 		target = body
 		
-		_change_state(STATES.TRACKING)
-		
 	if target == body and $PeriodOfMemory.get_time_left() > 0:
 		$PeriodOfMemory.stop()
 
@@ -193,8 +146,8 @@ func _on_AreaDetection_body_exited(body):
 
 # For how long it can track a threat for once it is out of it's vision
 func _on_PeriodOfMemory_timeout():
-	_change_state(STATES.PATROL)
 	target = null
+	blackboard.set("target", target, behaviourTree)
 
 func _draw():
     # display the visibility area

@@ -1,5 +1,6 @@
 extends "res://addons/godot-behavior-tree-plugin/action.gd"
 
+# Behaviour for running away from player
+
 func tick(tick):
-	tick.actor.set_modulate(Color(0,1,0))
 	return OK
