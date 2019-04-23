@@ -89,7 +89,6 @@ func moving_through_path():
 			# if it is at the end of it's path
 			if len(path) == 0:
 				stop_movement()
-			target_point_world = path[0]
 
 func get_world_path():
 	path = get_parent().get_node('/root/Map/TileMap').get_world_path(self.position, target.position)

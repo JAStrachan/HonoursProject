@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Map.gd" type="Script" id=1]
 [ext_resource path="res://addons/godot-behavior-tree-plugin/behavior_tree.gd" type="Script" id=2]
@@ -23,7 +23,8 @@
 [ext_resource path="res://scenes/GUI.tscn" type="PackedScene" id=21]
 [ext_resource path="res://powerups/HealthBoost.tscn" type="PackedScene" id=22]
 [ext_resource path="res://Enemies/LargeEnemy.tscn" type="PackedScene" id=23]
-[ext_resource path="res://Enemies/SmallEnemy.tscn" type="PackedScene" id=24]
+[ext_resource path="res://Enemies/MediumEnemy.tscn" type="PackedScene" id=24]
+[ext_resource path="res://Enemies/SmallEnemy.tscn" type="PackedScene" id=25]
 
 [node name="Map" type="Node"]
 script = ExtResource( 1 )
@@ -216,7 +217,10 @@ __meta__ = {
 [node name="LargeEnemy3" parent="." instance=ExtResource( 23 )]
 position = Vector2( 688, 368 )
 
-[node name="SmallEnemy" parent="." instance=ExtResource( 24 )]
+[node name="Enemy" parent="." instance=ExtResource( 24 )]
+position = Vector2( 240, 392 )
+
+[node name="SmallEnemy" parent="." instance=ExtResource( 25 )]
 position = Vector2( 240, 392 )
 
 [node name="SpawnTimer" type="Timer" parent="."]
