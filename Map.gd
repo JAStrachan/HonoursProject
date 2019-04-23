@@ -18,8 +18,11 @@ func spawnEnemies(spawnableLocations):
 	var enemy = chooseEnemyToSpawn()
 	if not enemy:
 		return
-		
-	for index in range(0, spawnableLocations.size()):
+	
+	var spawned = false
+	var noOfTrys = 0
+	while noOfTrys < spawnableLocations.size() and spawned == false:
+		noOfTrys += 1
 		randomize()
 		var random_number = rand_range(0, spawnableLocations.size()-1)
 		random_number = round(random_number)
@@ -28,7 +31,8 @@ func spawnEnemies(spawnableLocations):
 		var listOfObjectPositions = getListOfObjectPositions()
 		if isLocationIsClear(spawnLocation, listOfObjectPositions):
 			enemy.spawn(spawnLocation)
-			self.add_child(enemy)
+			add_child(enemy)
+			spawned = true
 	$SpawnTimer.start()
 	
 func chooseEnemyToSpawn():
@@ -75,8 +79,6 @@ func calculate_ratio(total, count):
 func instanceEnemy(enemy):
 	# instances an enemy and keeps track of how many have been spawned
 	enemy = enemy.instance()
-	
-	enemy.connect("enemy_death", self, "_on_enemy_death" )
 	
 	var enemyClass = enemy.get_class()
 	
