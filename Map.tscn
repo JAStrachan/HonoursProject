@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://Map.gd" type="Script" id=1]
 [ext_resource path="res://addons/godot-behavior-tree-plugin/behavior_tree.gd" type="Script" id=2]
@@ -22,7 +22,6 @@
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=20]
 [ext_resource path="res://scenes/GUI.tscn" type="PackedScene" id=21]
 [ext_resource path="res://powerups/HealthBoost.tscn" type="PackedScene" id=22]
-[ext_resource path="res://Enemies/LargeEnemy.tscn" type="PackedScene" id=23]
 
 [node name="Map" type="Node"]
 script = ExtResource( 1 )
@@ -213,9 +212,6 @@ position = Vector2( 144, 128 )
 [node name="SpawnTimer" type="Timer" parent="."]
 wait_time = 3.0
 autostart = true
-
-[node name="LargeEnemy" parent="." instance=ExtResource( 23 )]
-position = Vector2( 368, 624 )
 
 [connection signal="health_changed" from="Player" to="CanvasLayer/GUI" method="_on_Player_health_changed"]
 [connection signal="score_changed" from="Player" to="CanvasLayer/GUI" method="_on_Player_score_changed"]

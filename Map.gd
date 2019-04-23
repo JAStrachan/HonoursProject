@@ -14,26 +14,26 @@ func _ready():
 	spawnEnemies(spawnableLocations)
 	
 func spawnEnemies(spawnableLocations):
-	pass
-#	var enemy = chooseEnemyToSpawn()
-#	if not enemy:
-#		return
-#
-#	var spawned = false
-#	var noOfTrys = 0
-#	while noOfTrys < spawnableLocations.size() and spawned == false:
-#		noOfTrys += 1
-#		randomize()
-#		var random_number = rand_range(0, spawnableLocations.size()-1)
-#		random_number = round(random_number)
-#		# to get it in the center of the spawning tile
-#		var spawnLocation = Vector2(spawnableLocations[random_number].x + 16, spawnableLocations[random_number].y + 16)
-#		var listOfObjectPositions = getListOfObjectPositions()
-#		if isLocationIsClear(spawnLocation, listOfObjectPositions):
-#			enemy.spawn(spawnLocation)
-#			add_child(enemy)
-#			spawned = true
-#	$SpawnTimer.start()
+	var enemy = chooseEnemyToSpawn()
+	if not enemy:
+		return
+
+	var spawned = false
+	var noOfTrys = 0
+	while noOfTrys < spawnableLocations.size() and spawned == false:
+		noOfTrys += 1
+		randomize()
+		var random_number = rand_range(0, spawnableLocations.size()-1)
+		random_number = round(random_number)
+		# to get it in the center of the spawning tile
+		var spawnLocation = Vector2(spawnableLocations[random_number].x + 16, spawnableLocations[random_number].y + 16)
+		var listOfObjectPositions = getListOfObjectPositions()
+		if isLocationIsClear(spawnLocation, listOfObjectPositions):
+			enemy.spawn(spawnLocation)
+			add_child(enemy)
+			
+			spawned = true
+	$SpawnTimer.start()
 	
 func chooseEnemyToSpawn():
 	var enemy
@@ -70,24 +70,15 @@ func chooseEnemyToSpawn():
 		
 func calculate_ratio(total, count):
 	var ratio
-	if count == 0:
+	if count <= 0:
 		ratio = 0
 	else:
-		ratio = total/count * 100
+		ratio = count / total * 100
 	return ratio
 	
 func instanceEnemy(enemy):
 	# instances an enemy and keeps track of how many have been spawned
 	enemy = enemy.instance()
-	
-	var enemyClass = enemy.get_class()
-	
-	if enemyClass == "SmallEnemy":
-		Global.smallEnemyCount += 1
-	elif enemyClass == "MediumEnemy":
-		Global.mediumEnemyCount += 1
-	elif enemyClass == "LargeEnemy":
-		Global.largeEnemyCount += 1
 	
 	return enemy
 	

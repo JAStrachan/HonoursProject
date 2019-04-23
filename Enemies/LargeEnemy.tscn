@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Enemies/MediumEnemy.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Enemies/Enemy.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Enemies/LargeEnemy.gd" type="Script" id=2]
 [ext_resource path="res://Enemies/LargeEnemy.png.png" type="Texture" id=3]
 

@@ -3,11 +3,12 @@
 [ext_resource path="res://TileSets/brickTileset.tres" type="TileSet" id=1]
 [ext_resource path="res://scripts/TileMap.gd" type="Script" id=2]
 [ext_resource path="res://Player/Player.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Enemies/MediumEnemy.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Enemies/Enemy.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scenes/GUI.tscn" type="PackedScene" id=5]
 [ext_resource path="res://powerups/HealthBoost.tscn" type="PackedScene" id=6]
 [ext_resource path="res://addons/godot-behavior-tree-plugin/blackboard.gd" type="Script" id=7]
 [ext_resource path="res://addons/godot-behavior-tree-plugin/blackboard_icon.png" type="Texture" id=8]
+
 
 
 
