@@ -8,6 +8,7 @@ var LargeEnemy = preload("res://Enemies/LargeEnemy.tscn")
 
 var spawnableLocations
 
+export (int) var Maximum_No_Of_Enemies = 15
 
 func _ready():
 	spawnableLocations = $TileMap.getSpawnLocations()
@@ -28,7 +29,7 @@ func spawnEnemies(spawnableLocations):
 		# to get it in the center of the spawning tile
 		var spawnLocation = Vector2(spawnableLocations[random_number].x + 16, spawnableLocations[random_number].y + 16)
 		var listOfObjectPositions = getListOfObjectPositions()
-		if isLocationIsClear(spawnLocation, listOfObjectPositions):
+		if isLocationClear(spawnLocation, listOfObjectPositions):
 			enemy.spawn(spawnLocation)
 			add_child(enemy)
 			
@@ -49,6 +50,7 @@ func chooseEnemyToSpawn():
 	
 	# Calculating ratios to make sure the player isn't overwhelemed with large enemies
 	
+	# making sure there isnt more than 40% of enemies being large
 	if ratioLarge > 40:
 		if ratioSmall < 40:
 			enemy = instanceEnemy(SmallEnemy)
@@ -58,16 +60,18 @@ func chooseEnemyToSpawn():
 			else:
 				enemy = instanceEnemy(MediumEnemy)
 	else:
+		# If there isn't large number of large enemies, randomise spawn
 		var randomFloat = randf()
-		if randomFloat < 0.34:
+		if randomFloat < 0.20:
 			enemy = instanceEnemy(LargeEnemy)
-		elif randomFloat < 0.67:
+		elif randomFloat < 0.60:
 			enemy = instanceEnemy(MediumEnemy)
 		else:
 			enemy = instanceEnemy(SmallEnemy)
 			
 	return enemy
 		
+# The ratios of the enemy types on the map
 func calculate_ratio(total, count):
 	var ratio
 	if count <= 0:
@@ -82,7 +86,8 @@ func instanceEnemy(enemy):
 	
 	return enemy
 	
-func isLocationIsClear(location: Vector2, listOfObjectPositions):
+# Testing to see if the location is clear to spawn enemies
+func isLocationClear(location: Vector2, listOfObjectPositions):
 	var clear = false
 	for position in listOfObjectPositions:
 		# Is there a object within 32 pixels of the middle of the tile
@@ -92,6 +97,7 @@ func isLocationIsClear(location: Vector2, listOfObjectPositions):
 			clear = true
 	return clear
 	
+# The list of objects that block the enemy spawning and their positions
 func getListOfObjectPositions():
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	
@@ -101,5 +107,10 @@ func getListOfObjectPositions():
 	listOfObjctPositions.append($Player.position)
 	return listOfObjctPositions
 
+# On this timeout spawn a new enemy if the total number of enemies doesn't exceed the maximum
 func _on_SpawnTimer_timeout():
-	spawnEnemies(spawnableLocations)
+	if getTotalNoOfEnemies() < Maximum_No_Of_Enemies:
+		spawnEnemies(spawnableLocations)
+
+func getTotalNoOfEnemies():
+	return Global.largeEnemyCount + Global.mediumEnemyCount + Global.smallEnemyCount
