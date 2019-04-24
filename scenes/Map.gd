@@ -109,8 +109,9 @@ func getListOfObjectPositions():
 
 # On this timeout spawn a new enemy if the total number of enemies doesn't exceed the maximum
 func _on_SpawnTimer_timeout():
-	if getTotalNoOfEnemies() < Maximum_No_Of_Enemies:
-		spawnEnemies(spawnableLocations)
+#	if getTotalNoOfEnemies() < Maximum_No_Of_Enemies:
+#		spawnEnemies(spawnableLocations)
+	pass
 
 func getTotalNoOfEnemies():
 	return Global.largeEnemyCount + Global.mediumEnemyCount + Global.smallEnemyCount

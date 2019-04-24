@@ -102,7 +102,14 @@ func moving_through_path():
 			# if it is at the end of it's path
 			if len(path) == 0:
 				stop_movement()
-
+				# Needs another patrol route set up, node and tree scope
+				blackboard.set("newPatrol", true, behaviourTree, self)
+				
+			if len(path) != 0:
+				target_point_world = path[0]
+			else:
+				target_point_world = self.position
+			
 # gets the path within in the world that the npc wants to follow
 func get_world_path(target_position):
 	path = tileMap.get_world_path(self.position, target_position)

@@ -7,7 +7,7 @@ func tick(tick):
 		var spawnLocations = tick.blackboard.get("spawnLocations", tick.tree)
 		# If a new patrol route (ie to new spawn location then)
 		randomize()
-		var random_number = rand_range(0, spawnLocations.size()-1)
+		var random_number = rand_range(0, spawnLocations.size())
 		
 		var waypoint = spawnLocations[random_number]
 		
@@ -16,7 +16,7 @@ func tick(tick):
 		
 		newPatrol = false
 		# setting the new patrol as false by this point a new path has been created. Node and tree scope
-		tick.blackboard.set("newPatrol", tick.tree, tick.actor)
+		tick.blackboard.set("newPatrol", newPatrol ,tick.tree, tick.actor)
 		
 	# Will correct newPatrol to true if end of path is reached
 	tick.actor.moving_through_path()
