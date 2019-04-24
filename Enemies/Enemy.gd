@@ -33,6 +33,7 @@ var velocity = Vector2()
 
 signal enemy_death
 
+onready var tileMap = get_parent().get_node('/root/Map/TileMap')
 
 onready var blackboard = get_node("/root/Map/Blackboard")
 onready var behaviourTree = get_node(behaviourTreePath)
@@ -49,22 +50,28 @@ func _ready():
 	$AreaDetection.connect("body_entered", self, "_on_AreaDetection_body_entered")
 	$AreaDetection.connect("body_exited", self, "_on_AreaDetection_body_exited")
 	
+	# Sets it so a new patrol is wanted when spawned
+	blackboard.set("newPatrol", true, behaviourTree, self)
+	
 # For random spawning, gives correct position on map
 func spawn(pos):
 	position = pos
+	
 
 func _process(delta):
 	update() # Used to add the drawing of the debugging behaviour
 
 # The main loop that iterates at a fixed process
 func _physics_process(delta):
-	var blackBoardTarget = blackboard.get("target", behaviourTree, self)
 	
 	if blackboard and behaviourTree:
+		var spawnLocations = tileMap.getSpawnLocations()
 		if target:
-			get_world_path()
+			get_world_path(target.position)
 			blackboard.set("target", target, behaviourTree, self)
 			blackboard.set("distance_from_threat", DISTANCE_FROM_THREAT, behaviourTree, self)
+			
+		blackboard.set("spawnLocations", spawnLocations, behaviourTree)
 		behaviourTree.tick(self, blackboard)
 	
 	rotate(rotation * delta) # rotates the character independant of its movement
@@ -97,8 +104,8 @@ func moving_through_path():
 				stop_movement()
 
 # gets the path within in the world that the npc wants to follow
-func get_world_path():
-	path = get_parent().get_node('/root/Map/TileMap').get_world_path(self.position, target.position)
+func get_world_path(target_position):
+	path = tileMap.get_world_path(self.position, target_position)
 	if path.size() > 1:
 		target_point_world = path[1]
 	else:

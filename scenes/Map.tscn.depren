@@ -23,6 +23,7 @@
 [ext_resource path="res://scenes/GUI.tscn" type="PackedScene" id=21]
 [ext_resource path="res://powerups/HealthBoost.tscn" type="PackedScene" id=22]
 
+
 [node name="Map" type="Node"]
 script = ExtResource( 1 )
 
