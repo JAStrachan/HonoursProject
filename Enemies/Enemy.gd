@@ -12,7 +12,7 @@ var healthLow = false
 export (int) var vision_distance = 150
 export (bool) var can_shoot = true
 export (int) var score_to_add = 20
-export (String) var behaviourTreePath = '/root/Map/MediumEnemy'
+export (String) var behaviourTreePath = '/root/Map/MediumEnemyTree'
 
 var raycast_hit_pos = [] # the positions the raycasts have hit
 
@@ -219,3 +219,7 @@ func heal(healthToAdd):
 	health += healthToAdd
 	if health > totalHealth/2:
 		healthLow = false
+
+func _on_ResetPatrol_timeout():
+	# Needs another patrol route set up, node and tree scope
+	blackboard.set("newPatrol", true, behaviourTree, self)
