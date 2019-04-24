@@ -88,7 +88,7 @@ region_rect = Rect2( 64, 32, 32, 32 )
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CornerWithEdge/StaticBody2D"]
 polygon = PoolVector2Array( 0, 0, 32, 0, 32, 32, 0, 32 )
 
-[node name="Background" type="Sprite" parent="."]
+[node name="FloorTile" type="Sprite" parent="."]
 position = Vector2( 192, 0 )
 texture = ExtResource( 1 )
 centered = false
@@ -101,4 +101,11 @@ texture = ExtResource( 2 )
 centered = false
 region_enabled = true
 region_rect = Rect2( 96, 32, 32, 32 )
+
+[node name="Spawner" type="Sprite" parent="."]
+position = Vector2( 224, 0 )
+texture = ExtResource( 2 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 128, 32, 32, 32 )
 

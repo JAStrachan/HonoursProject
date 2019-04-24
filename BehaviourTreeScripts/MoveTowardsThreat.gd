@@ -1,15 +1,15 @@
 extends "res://addons/godot-behavior-tree-plugin/action.gd"
 
 func tick(tick):
-	var target = tick.blackboard.get("target", tick.tree)
-	var DISTANCE_FROM_THREAT = tick.blackboard.get("distance_from_threat", tick.tree)
+	var target = tick.blackboard.get("target", tick.tree, tick.actor)
+	var DISTANCE_FROM_THREAT = tick.blackboard.get("distance_from_threat", tick.tree, tick.actor)
 	var distanceToTarget = tick.actor.position.distance_to(target.position)
 	
 	var line_of_sight = tick.actor.detect_enemies()
 	if line_of_sight:
-		tick.blackboard.set("line_of_sight", line_of_sight, tick.tree)
+		tick.blackboard.set("line_of_sight", line_of_sight, tick.tree, tick.actor)
 	else:
-		tick.blackboard.set("line_of_sight", line_of_sight, tick.tree)
+		tick.blackboard.set("line_of_sight", line_of_sight, tick.tree, tick.actor)
 	
 	if distanceToTarget > DISTANCE_FROM_THREAT + 10 or not line_of_sight:
 		tick.actor.moving_through_path() #goes to chase state
@@ -18,7 +18,6 @@ func tick(tick):
 		tick.actor.stop_movement() # goes to ranged attack state
 		tick.actor.detection_area_colour = Color(0, 0.764, 0.819,0.1) # cyan-ish
 		
-	
 	return OK
 	
 	

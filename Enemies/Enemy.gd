@@ -43,23 +43,28 @@ func _ready():
 	shape.radius = vision_distance
 	$AreaDetection/CollisionShape2D.shape = shape
 	
+	# So we can collect information about it without a direct reference to the exact node it is
+	add_to_group("enemies")
+	
 	$AreaDetection.connect("body_entered", self, "_on_AreaDetection_body_entered")
 	$AreaDetection.connect("body_exited", self, "_on_AreaDetection_body_exited")
-
-func _on_ready():
-	# Used to adjust child classes variables
-	behaviourTreePath = '/root/Map/MediumEnemy'
+	
+# For random spawning, gives correct position on map
+func spawn(pos):
+	position = pos
 
 func _process(delta):
 	update() # Used to add the drawing of the debugging behaviour
-	#pass
 
+# The main loop that iterates at a fixed process
 func _physics_process(delta):
+	var blackBoardTarget = blackboard.get("target", behaviourTree, self)
+	
 	if blackboard and behaviourTree:
 		if target:
 			get_world_path()
-			blackboard.set("target", target, behaviourTree)
-			blackboard.set("distance_from_threat", DISTANCE_FROM_THREAT, behaviourTree)
+			blackboard.set("target", target, behaviourTree, self)
+			blackboard.set("distance_from_threat", DISTANCE_FROM_THREAT, behaviourTree, self)
 		behaviourTree.tick(self, blackboard)
 	
 	rotate(rotation * delta) # rotates the character independant of its movement
@@ -70,6 +75,7 @@ func _physics_process(delta):
 		if collision.collider.has_method("enemy_touch"):
 			collision.collider.enemy_touch()
 
+# calculates the velcocity and the rotation (if we don't have line of sight, as then rotation gets overwritten)
 func move_to(world_position):
 	var ARRIVE_DISTANCE = 10.0 # distance it needs to hit for the point on path to start considering the next point
 	var desired_velocity = (world_position - position).normalized() * SPEED
@@ -78,7 +84,8 @@ func move_to(world_position):
 	if not enemy_line_of_sight:
 		rotation = velocity.angle()
 	return position.distance_to(world_position) < ARRIVE_DISTANCE
-	
+
+# calculates if the npc has arrived to the next path point and if it is at the end of its path
 func moving_through_path():
 	var arrived_to_next_point = move_to(target_point_world)
 	if arrived_to_next_point:
@@ -88,19 +95,22 @@ func moving_through_path():
 			# if it is at the end of it's path
 			if len(path) == 0:
 				stop_movement()
-			target_point_world = path[0]
 
+# gets the path within in the world that the npc wants to follow
 func get_world_path():
 	path = get_parent().get_node('/root/Map/TileMap').get_world_path(self.position, target.position)
-	target_point_world = path[1]
+	if path.size() > 1:
+		target_point_world = path[1]
+	else:
+		pass
 	
+# A function that stops movement of the npc. So the flow for stopping is always through here and easily trackable
 func stop_movement():
 	velocity = Vector2(0,0)
 	
-# Used for detecting any threats to itself via raycasting
+# Used for detecting any threats to itself via raycasting, also calculates the rotation for turning to face threat
 # Taken from http://kidscancode.org/blog/2018/03/godot3_visibility_raycasts/
 func detect_enemies():
-	
 	raycast_hit_pos = []
 	var space_state = get_world_2d().direct_space_state
 	var radius = 16
@@ -136,10 +146,14 @@ func _on_AreaDetection_body_entered(body):
 	# need to add this condition so it does other enemy types as well
 	if body.name == "Player": 
 		target = body
+		blackboard.set("target", target, behaviourTree, self)
 		
+	# So if the timer has started and the threat has entered the area of detection again stop the timer
 	if target == body and $PeriodOfMemory.get_time_left() > 0:
 		$PeriodOfMemory.stop()
 
+# Start the timer to stop following the threat
+# Once the threat has left the area of detection for a period of time stop following them
 func _on_AreaDetection_body_exited(body):
 	if body == target:
 		$PeriodOfMemory.start()
@@ -147,11 +161,11 @@ func _on_AreaDetection_body_exited(body):
 # For how long it can track a threat for once it is out of it's vision
 func _on_PeriodOfMemory_timeout():
 	target = null
-	blackboard.set("target", target, behaviourTree)
+	blackboard.set("target", target, behaviourTree, self)
 
 func _draw():
     # display the visibility area
-	# this debugging code stuff is from http://kidscancode.org/blog/2018/03/godot3_visibility_raycasts/
+	# this debugging code stuff is adapted from http://kidscancode.org/blog/2018/03/godot3_visibility_raycasts/
 	draw_circle(Vector2(), vision_distance, detection_area_colour)
 	var radius = 25 
 
@@ -173,17 +187,20 @@ func _draw():
 func _on_time_since_last_shot_timeout():
 	can_shoot = true
 	
+# Method for duck-typing, if a bullet hits use this method
 func bullet_hit(bullet_damage):
 	if health - bullet_damage <= 0:
-		# death
-		Global.update_enemy_count()
-		emit_signal("enemy_death", score_to_add)
-		queue_free()
+		death()
 	else:
 		health = health - bullet_damage
 		if health < totalHealth/2:
 			healthLow = true
 
+func death():
+	# Is overridden in child classes
+	pass
+	
+# Duck typing heal method. Interacts with health boosts
 func heal(healthToAdd):
 	health += healthToAdd
 	if health > totalHealth/2:

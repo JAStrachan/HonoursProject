@@ -23,7 +23,8 @@ onready var springarm = $'Pivot'
 func _ready():
 	can_shoot = true
 	score = 0
-# Basic movement taken from tutorial at http://docs.godotengine.org/en/3.0/tutorials/2d/2d_movement.html
+	
+# Basic movement taken and adapted from tutorial at http://docs.godotengine.org/en/3.0/tutorials/2d/2d_movement.html
 func get_input(delta):
 	# Get the mouse position and the angle we need to point ourselves to it
 	# Gives that in radians to 'rotation' a field of a parent class
@@ -77,8 +78,8 @@ func shoot():
 		$time_since_last_shot.start()
 		
 # if an enemy physically attacks a player (ie touches a player)
-func enemy_touch():
-	hit(enemy_physical_attack)
+#func enemy_touch():
+	#hit(enemy_physical_attack)
 	
 func heal(health_boost):
 	health = health + health_boost
@@ -88,7 +89,6 @@ func heal(health_boost):
 
 func hit(damage):
 	if health - damage <=0:
-
 		death()
 	else:
 		health = health - damage

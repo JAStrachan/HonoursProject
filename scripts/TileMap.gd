@@ -31,6 +31,13 @@ func _ready():
 			get_used_cells_by_id(9)
 	var walkable_cells_list = astar_add_walkable_cells(obstacles)
 	astar_connect_walkable_cells_diagonal(walkable_cells_list)
+	
+# gets all the tiles where spawnable locations are for the map node
+func getSpawnLocations():
+	var spawnTileMapLocations =  get_used_cells_by_id(11)
+	for i in range(0, spawnTileMapLocations.size()):
+		spawnTileMapLocations[i] = map_to_world(spawnTileMapLocations[i])
+	return spawnTileMapLocations
 
 # Loops through all cells within the map's bounds and
 # adds all points to the astar_node, except the obstacles

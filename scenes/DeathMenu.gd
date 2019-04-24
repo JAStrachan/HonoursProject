@@ -6,7 +6,7 @@ onready var noOfEnemies_label = $MarginContainer/VBoxContainer/ScoreAndEnemyCoun
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	score_label.text = str(Global.score)
-	noOfEnemies_label.text = str(Global.no_of_enemies)
+	noOfEnemies_label.text = str(Global.no_of_dead_enemies)
 
 
 func _on_Button_pressed():
