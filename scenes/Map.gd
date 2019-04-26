@@ -123,8 +123,7 @@ func getListOfObjectPositions():
 # On this timeout spawn a new enemy if the total number of enemies doesn't exceed the maximum
 func _on_SpawnTimer_timeout():
 	if getTotalNoOfEnemies() < Maximum_No_Of_Enemies:
-		#spawnEnemies(spawnableLocations)
-		pass
+		spawnEnemies()
 		
 func _on_HealthBoostTimer_timeout():
 	var noOfHealthBoosts = get_tree().get_nodes_in_group("HealthBoost").size()

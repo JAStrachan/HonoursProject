@@ -5,10 +5,14 @@ func _ready():
 	
 func death():
 	Global.update_enemy_death_count()
-		
+	
+	target = null
+	blackboard.set("target", target, behaviourTree, self)
 	emit_signal("enemy_death", score_to_add)
-	queue_free()
 	Global.smallEnemyCount -= 1
+	
+	queue_free()
+	
 	
 ## Overriding this method because the small enemies cannot heal
 #func heal(health_boost):
