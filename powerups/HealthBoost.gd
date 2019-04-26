@@ -11,5 +11,6 @@ func _on_HealthBoost_body_entered(body):
 		body.heal(HEALTH_BOOST)
 	queue_free()
 
+# When spawned where to be positioned
 func spawn(pos):
 	position = pos
