@@ -10,6 +10,8 @@ var smallEnemyCount = 0
 var mediumEnemyCount = 0
 var current_scene = null
 
+signal score_changed
+
 func _ready():
     var root = get_tree().get_root()
     current_scene = root.get_child(root.get_child_count() - 1)
@@ -45,6 +47,8 @@ func _deferred_goto_scene(path):
 
 func update_score(number_to_add):
 	score += number_to_add
+	emit_signal("score_changed", score);
+	
 	
 func reset_score():
 	score = 0

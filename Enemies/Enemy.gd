@@ -204,6 +204,7 @@ func _on_time_since_last_shot_timeout():
 # Method for duck-typing, if a bullet hits use this method
 func bullet_hit(bullet_damage):
 	if health - bullet_damage <= 0:
+		Global.update_score(score_to_add)
 		death()
 	else:
 		health = health - bullet_damage

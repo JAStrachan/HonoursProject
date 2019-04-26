@@ -15,5 +15,5 @@ func death():
 	
 	
 ## Overriding this method because the small enemies cannot heal
-#func heal(health_boost):
-#	pass
+func heal(health_boost):
+	pass
