@@ -10,7 +10,11 @@ var smallEnemyCount = 0
 var mediumEnemyCount = 0
 var current_scene = null
 
+var debug_mode = false
+
 signal score_changed
+
+signal debug_mode_changed
 
 func _ready():
     var root = get_tree().get_root()

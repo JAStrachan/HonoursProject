@@ -39,6 +39,12 @@ func get_input(delta):
 		velocity.y += 1
 	if Input.is_action_pressed('ui_up'):
 		velocity.y -= 1
+		
+	if Input.is_action_just_released('ui_debug_mode'):
+		if Global.debug_mode:
+			Global.debug_mode = false
+		else:
+			Global.debug_mode = true
 	# normalised the velocity otherwise going diagonal would be faster
 	velocity = velocity.normalized() * speed
 	
@@ -78,8 +84,11 @@ func shoot():
 		$time_since_last_shot.start()
 		
 # if an enemy physically attacks a player (ie touches a player)
-#func enemy_touch():
-	#hit(enemy_physical_attack)
+func enemy_touch():
+	hit(enemy_physical_attack)
+
+func bullet_hit(bullet_damage):
+	hit(bullet_damage)
 	
 func heal(health_boost):
 	health = health + health_boost
@@ -91,8 +100,11 @@ func hit(damage):
 	if health - damage <=0:
 		death()
 	else:
-		health = health - damage
+		if not Global.debug_mode: # If not debugging we can take damage
+			health = health - damage
 		emit_signal('health_changed', health)
+
+
 		
 func death():
 	emit_signal("death")

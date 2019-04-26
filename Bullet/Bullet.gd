@@ -15,8 +15,14 @@ func _physics_process(delta):
 	if collision:
 		if collision.collider.has_method("bullet_hit"):
 			collision.collider.bullet_hit(bullet_damage)
+		if collision.collider.has_method("projectile_hit"):
+			collision.collider.projectile_hit()
 			
 		queue_free()
 
 func _on_VisibilityNotifier2D_screen_exited():
+	queue_free()
+
+func projectile_hit():
+	# For when it hits another projectile
 	queue_free()

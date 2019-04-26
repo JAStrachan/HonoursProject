@@ -14,7 +14,7 @@ MASS = 20.0
 DISTANCE_FROM_THREAT = 130
 health = 150
 totalHealth = 200
-vision_distance = 180
+vision_distance = 350
 score_to_add = 50
 behaviourTreePath = "/root/Map/LargeEnemyTree"
 

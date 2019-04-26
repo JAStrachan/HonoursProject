@@ -13,6 +13,7 @@ SPEED = 180.0
 DISTANCE_FROM_THREAT = 0
 health = 50
 totalHealth = 50
+vision_distance = 300
 score_to_add = 10
 behaviourTreePath = "/root/Map/SmallEnemyTree"
 
