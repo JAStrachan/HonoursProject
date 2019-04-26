@@ -54,6 +54,8 @@ func _ready():
 	# Sets it so a new patrol is wanted when spawned
 	blackboard.set("newPatrol", true, behaviourTree, self)
 	
+	Global.connect("debug_mode_changed",self, "_on_debug_mode_changed")
+	
 # For random spawning, gives correct position on map
 func spawn(pos):
 	position = pos
@@ -62,6 +64,8 @@ func spawn(pos):
 func _process(delta):
 	update() # Used to add the drawing of the debugging behaviour
 
+func _on_debug_mode_changed():
+	pass
 # The main loop that iterates at a fixed process
 func _physics_process(delta):
 	
@@ -182,23 +186,26 @@ func _on_PeriodOfMemory_timeout():
 func _draw():
     # display the visibility area
 	# this debugging code stuff is adapted from http://kidscancode.org/blog/2018/03/godot3_visibility_raycasts/
-	draw_circle(Vector2(), vision_distance, detection_area_colour)
-	var radius = 25 
-
-	if target:
-		# shows collision points
-		var north = target.position + Vector2(0, radius)
-		var south = target.position + Vector2(0, -radius)
-		var west = target.position + Vector2(-radius, 0)
-		var east = target.position + Vector2(radius, 0)
-
-		for pos in [ north, south, west, east ]: 
-			draw_circle((pos - position).rotated(-rotation), 5, raycast_debug_colour)
-
-		for hit in raycast_hit_pos:
-			draw_line(Vector2(), (hit - position).rotated(-rotation), raycast_debug_colour)
-			draw_circle((hit - position).rotated(-rotation), 5, raycast_debug_colour)
-
+	if Global.debug_mode:
+		draw_circle(Vector2(), vision_distance, detection_area_colour)
+		var radius = 25 
+	
+		if target:
+			# shows collision points
+			var north = target.position + Vector2(0, radius)
+			var south = target.position + Vector2(0, -radius)
+			var west = target.position + Vector2(-radius, 0)
+			var east = target.position + Vector2(radius, 0)
+	
+			for pos in [ north, south, west, east ]: 
+				draw_circle((pos - position).rotated(-rotation), 5, raycast_debug_colour)
+	
+			for hit in raycast_hit_pos:
+				draw_line(Vector2(), (hit - position).rotated(-rotation), raycast_debug_colour)
+				draw_circle((hit - position).rotated(-rotation), 5, raycast_debug_colour)
+	else:
+		pass
+		
 # Time in between shots
 func _on_time_since_last_shot_timeout():
 	can_shoot = true
