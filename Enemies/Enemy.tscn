@@ -28,5 +28,10 @@ one_shot = true
 [node name="time_since_last_shot" type="Timer" parent="."]
 wait_time = 0.7
 
+[node name="ResetPatrol" type="Timer" parent="."]
+wait_time = 9.0
+autostart = true
+
 [connection signal="timeout" from="PeriodOfMemory" to="." method="_on_PeriodOfMemory_timeout"]
 [connection signal="timeout" from="time_since_last_shot" to="." method="_on_time_since_last_shot_timeout"]
+[connection signal="timeout" from="ResetPatrol" to="." method="_on_ResetPatrol_timeout"]

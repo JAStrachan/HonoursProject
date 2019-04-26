@@ -10,11 +10,11 @@ radius = 9.70663
 [node name="SmallEnemy" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 SPEED = 180.0
-MASS = 8.0
 DISTANCE_FROM_THREAT = 0
 health = 50
 totalHealth = 50
 score_to_add = 10
+behaviourTreePath = "/root/Map/SmallEnemyTree"
 
 [node name="Sprite" parent="." index="0"]
 texture = ExtResource( 3 )

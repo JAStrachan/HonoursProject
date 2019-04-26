@@ -6,22 +6,36 @@ var MediumEnemy = preload("res://Enemies/MediumEnemy.tscn")
 var SmallEnemy = preload("res://Enemies/SmallEnemy.tscn")
 var LargeEnemy = preload("res://Enemies/LargeEnemy.tscn")
 
+var HealthBoost = preload("res://powerups/HealthBoost.tscn")
+
 var spawnableLocations
 
 export (int) var Maximum_No_Of_Enemies = 15
 
 func _ready():
 	spawnableLocations = $TileMap.getSpawnLocations()
-	spawnEnemies(spawnableLocations)
+	spawnEnemies()
+	spawnHealth()
 	
-func spawnEnemies(spawnableLocations):
+func spawnEnemies():
 	var enemy = chooseEnemyToSpawn()
 	if not enemy:
 		return
 
+	spawn(enemy, 0)
+	$SpawnTimer.start()
+	
+func spawnHealth():
+	var healthBoost = HealthBoost.instance()
+	
+	spawn(healthBoost, -3)
+	$HealthBoostTimer.start()
+	
+func spawn(objectToSpawn, trysModifier):
 	var spawned = false
 	var noOfTrys = 0
-	while noOfTrys < spawnableLocations.size() and spawned == false:
+	var maxNoOfTrys = spawnableLocations.size() + trysModifier
+	while noOfTrys < maxNoOfTrys and spawned == false:
 		noOfTrys += 1
 		randomize()
 		var random_number = rand_range(0, spawnableLocations.size()-1)
@@ -30,11 +44,10 @@ func spawnEnemies(spawnableLocations):
 		var spawnLocation = Vector2(spawnableLocations[random_number].x + 16, spawnableLocations[random_number].y + 16)
 		var listOfObjectPositions = getListOfObjectPositions()
 		if isLocationClear(spawnLocation, listOfObjectPositions):
-			enemy.spawn(spawnLocation)
-			add_child(enemy)
+			objectToSpawn.spawn(spawnLocation)
+			add_child(objectToSpawn)
 			
 			spawned = true
-	$SpawnTimer.start()
 	
 func chooseEnemyToSpawn():
 	var enemy
@@ -110,7 +123,15 @@ func getListOfObjectPositions():
 # On this timeout spawn a new enemy if the total number of enemies doesn't exceed the maximum
 func _on_SpawnTimer_timeout():
 	if getTotalNoOfEnemies() < Maximum_No_Of_Enemies:
-		spawnEnemies(spawnableLocations)
+		spawnEnemies()
+		
+func _on_HealthBoostTimer_timeout():
+	var noOfHealthBoosts = get_tree().get_nodes_in_group("HealthBoost").size()
+	if noOfHealthBoosts < 2:
+		spawnHealth()
 
 func getTotalNoOfEnemies():
 	return Global.largeEnemyCount + Global.mediumEnemyCount + Global.smallEnemyCount
+
+
+

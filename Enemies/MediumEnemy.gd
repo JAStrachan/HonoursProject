@@ -7,7 +7,11 @@ func _ready():
 	
 func death():
 	Global.update_enemy_death_count()
-		
-	emit_signal("enemy_death", score_to_add)
-	queue_free()
+	
+	target = null
+	blackboard.set("target", target, behaviourTree, self)
 	Global.mediumEnemyCount -= 1
+	emit_signal("enemy_death", score_to_add)
+	
+	queue_free()
+	
