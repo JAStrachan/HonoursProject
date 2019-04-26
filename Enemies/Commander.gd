@@ -32,7 +32,8 @@ func _on_AreaDetection_body_entered(body):
 #		$PeriodOfMemory.stop()
 		
 	if body.has_method("addedToSquad"):
-		addToSquad(body)
+		if not body.inSquad:
+			addToSquad(body)
 		
 func addToSquad(body):
 	if squad.find(body) == -1:
