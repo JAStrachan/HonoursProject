@@ -12,6 +12,7 @@ var healthLow = false
 export (int) var vision_distance = 150
 export (bool) var can_shoot = true
 export (int) var score_to_add = 20
+export (float) var lowHealthPercentage = 0.4  # determines exactly at what percentage of health does an enemy run
 export (String) var behaviourTreePath = '/root/Map/MediumEnemyTree'
 
 var raycast_hit_pos = [] # the positions the raycasts have hit
@@ -67,7 +68,6 @@ func _physics_process(delta):
 	if blackboard and behaviourTree:
 		var spawnLocations = tileMap.getSpawnLocations()
 		if target:
-			get_world_path(target.position)
 			blackboard.set("target", target, behaviourTree, self)
 			blackboard.set("distance_from_threat", DISTANCE_FROM_THREAT, behaviourTree, self)
 			
@@ -104,6 +104,8 @@ func moving_through_path():
 				stop_movement()
 				# Needs another patrol route set up, node and tree scope
 				blackboard.set("newPatrol", true, behaviourTree, self)
+				
+				healthLow = false
 				
 			if len(path) != 0:
 				target_point_world = path[0]
@@ -208,8 +210,11 @@ func bullet_hit(bullet_damage):
 		death()
 	else:
 		health = health - bullet_damage
-		if health < totalHealth/2:
+		if health/totalHealth < lowHealthPercentage and not healthLow:
+			# Only set this code running once everytime health dips below the limit
 			healthLow = true
+			# Set the actor to run
+			blackboard.set("run", true, behaviourTree, self)
 
 func death():
 	# Is overridden in child classes

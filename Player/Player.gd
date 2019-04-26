@@ -78,8 +78,8 @@ func shoot():
 		$time_since_last_shot.start()
 		
 # if an enemy physically attacks a player (ie touches a player)
-#func enemy_touch():
-	#hit(enemy_physical_attack)
+func enemy_touch():
+	hit(enemy_physical_attack)
 	
 func heal(health_boost):
 	health = health + health_boost
@@ -91,7 +91,7 @@ func hit(damage):
 	if health - damage <=0:
 		death()
 	else:
-		health = health - damage
+	#health = health - damage
 		emit_signal('health_changed', health)
 		
 func death():

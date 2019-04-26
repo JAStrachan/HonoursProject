@@ -3,6 +3,8 @@ extends "res://addons/godot-behavior-tree-plugin/action.gd"
 func tick(tick):
 	var target = tick.blackboard.get("target", tick.tree, tick.actor)
 	var DISTANCE_FROM_THREAT = tick.blackboard.get("distance_from_threat", tick.tree, tick.actor)
+	
+	tick.actor.get_world_path(target.position)
 	var distanceToTarget = tick.actor.position.distance_to(target.position)
 	
 	var line_of_sight = tick.actor.detect_enemies()
