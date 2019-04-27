@@ -5,7 +5,7 @@ func tick(tick):
 	var target = tick.blackboard.get("target", tick.tree, tick.actor)
 	for squadMember in squad:
 		if is_instance_valid(squadMember):
-			if not squadMember.has_method("projectile_hit"):
+			if squadMember.has_method("is_enemy"):
 				moveToAttack(squadMember, target, tick)
 	
 	moveToAttack(tick.actor, target, tick)

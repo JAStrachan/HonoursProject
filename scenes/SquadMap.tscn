@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://scenes/SquadMap.gd" type="Script" id=1]
 [ext_resource path="res://addons/godot-behavior-tree-plugin/behavior_tree.gd" type="Script" id=2]
@@ -23,7 +23,8 @@
 [ext_resource path="res://scenes/GUI.tscn" type="PackedScene" id=21]
 [ext_resource path="res://BehaviourTreeScripts/RunAwayWithSquad.gd" type="Script" id=22]
 [ext_resource path="res://BehaviourTreeScripts/MoveTowardsThreatWithSquad.gd" type="Script" id=23]
-[ext_resource path="res://BehaviourTreeScripts/PatrolSquad.gd" type="Script" id=24]
+[ext_resource path="res://scenes/ShootWithSquad.gd" type="Script" id=24]
+[ext_resource path="res://BehaviourTreeScripts/PatrolSquad.gd" type="Script" id=25]
 
 [node name="Map" type="Node"]
 script = ExtResource( 1 )
@@ -265,14 +266,14 @@ __meta__ = {
 "_editor_icon": ExtResource( 11 )
 }
 
-[node name="Shoot" type="Node" parent="CommanderTree/BehaviorSelector/AttackThreat"]
-script = ExtResource( 14 )
+[node name="ShootWithSquad" type="Node" parent="CommanderTree/BehaviorSelector/AttackThreat"]
+script = ExtResource( 24 )
 __meta__ = {
 "_editor_icon": ExtResource( 11 )
 }
 
 [node name="PatrolSquad" type="Node" parent="CommanderTree/BehaviorSelector"]
-script = ExtResource( 24 )
+script = ExtResource( 25 )
 __meta__ = {
 "_editor_icon": ExtResource( 11 )
 }

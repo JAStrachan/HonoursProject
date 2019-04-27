@@ -85,7 +85,7 @@ func targetClear():
 	
 func death():
 	for member in squad:
-		if is_instance_valid(member):
+		if is_instance_valid(member) and member.has_method("is_enemy"):
 			member.squadDisbanded()
 			
 	Global.update_enemy_death_count()
