@@ -20,6 +20,14 @@ func _ready():
     var root = get_tree().get_root()
     current_scene = root.get_child(root.get_child_count() - 1)
 	
+func reset():
+	score = 0
+	no_of_dead_enemies = 0
+	
+	largeEnemyCount = 0
+	smallEnemyCount = 0
+	mediumEnemyCount = 0
+	
 # Scene change stuff is from the godot tutorials http://docs.godotengine.org/en/3.1/getting_started/step_by_step/singletons_autoload.html
 func goto_scene(path):
     # This function will usually be called from a signal callback,

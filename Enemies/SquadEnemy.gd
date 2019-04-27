@@ -46,6 +46,7 @@ func _on_AreaDetection_body_entered(body):
 	if body.name == "Player": 
 		target = body
 		if inSquad:
+			# TODO add  protection
 			squadLeader.update_squad_target(target)
 		blackboard.set("target", target, behaviourTree, self)
 		

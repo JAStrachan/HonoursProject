@@ -12,8 +12,7 @@ func death():
 	emit_signal("enemy_death", score_to_add)
 	if inSquad:
 		squadLeader._on_squad_members_death(self)
-	call_deferred("free")
-	#queue_free()
+	queue_free()
 	
 func grunt():
 	pass
