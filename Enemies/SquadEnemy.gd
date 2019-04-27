@@ -25,11 +25,8 @@ func useBehaviourTrees():
 			blackboard.set("spawnLocations", spawnLocations, behaviourTree)	
 			behaviourTree.tick(self, blackboard)
 		else:
-			#get_world_path(squadLeader.position)
 			
 			self.detection_area_colour = Color(1, 0.501, 0.964,0.1) # purple
-			
-			#moving_through_path()
 			
 # calculates the velocity and the rotation (if we don't have line of sight, as then rotation gets overwritten)
 # Steering behaviour algorithms written in flash https://gamedevelopment.tutsplus.com/tutorials/understanding-steering-behaviors-leader-following--gamedev-10810
@@ -42,10 +39,30 @@ func move_to(world_position):
 	if not enemy_line_of_sight:
 		rotation = velocity.angle()
 	return position.distance_to(world_position) < ARRIVE_DISTANCE
-	
 
-
-	
-			
+# TODO Sort these out with threat models so they can rank the threats
 func _on_AreaDetection_body_entered(body):
-	pass
+	# need to add this condition so it does other enemy types as well
+	if body.name == "Player": 
+		target = body
+		if inSquad:
+			squadLeader.update_squad_target(target)
+		blackboard.set("target", target, behaviourTree, self)
+		
+	# So if the timer has started and the threat has entered the area of detection again stop the timer
+	if target == body and $PeriodOfMemory.get_time_left() > 0:
+		$PeriodOfMemory.stop()
+
+
+# For how long it can track a threat for once it is out of it's vision
+func _on_PeriodOfMemory_timeout():
+	if inSquad:
+		if not squadLeader.target:
+			target = null
+	else:
+		target = null
+		blackboard.set("target", target, behaviourTree, self)
+		
+func squadDisbanded():
+	inSquad = false
+	squadLeader = null
