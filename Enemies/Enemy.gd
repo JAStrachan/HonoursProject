@@ -27,7 +27,7 @@ var target_point_world = Vector2() # the next point in the path
 var threats = [] # the list of threats in range
 var enemy_line_of_sight = false
 
-var Bullet = preload("res://Bullet/PlayerBullet.tscn")
+var Bullet = preload("res://Bullet/EnemyBullet.tscn")
 
 var velocity = Vector2()
 
