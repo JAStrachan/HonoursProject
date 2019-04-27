@@ -11,37 +11,56 @@ func tick(tick):
 	var target = tick.blackboard.get("target", tick.tree, tick.actor)
 	
 	if run:
-		var spawnLocations = tick.blackboard.get("spawnLocations", tick.tree)
-		# Collecting target
-
-		
-		var waypoint # the place to run to
-		
-		if target: # if a target is available to run from
-			waypoint = calculateRunAwayLocation(tick, target, spawnLocations)
-				
-		else: # no target selected choose a random location
-			randomize()
-			var random_number = rand_range(0, spawnLocations.size())
-			waypoint = spawnLocations[random_number]
-		
-		# gets the path it needs to new spawn location
-		tick.actor.get_world_path(waypoint)
-		
-		# Only need to run once
-		run = false
-		# setting the new patrol as false by this point a new path has been created. Node and tree scope
-		tick.blackboard.set("run", run ,tick.tree, tick.actor)
+		getPathToRunLocation(tick.actor, target, tick)
 	
 	#  Will stop the running once it reaches the stopping point
 	tick.actor.moving_through_path()
 	
+	var squad = tick.blackboard.get("squad", tick.tree, tick.actor)
+	var spotToMoveTo = tick.actor.calculateFollowPosition()
+	
+	for squadMember in squad:
+		if is_instance_valid(squadMember):
+			if squadMember.has_method("is_enemy"):
+				squadMember.get_world_path(spotToMoveTo)
+				squadMember.moving_through_path()
+	
 	if target:
+		for squadMember in squad:
+			if is_instance_valid(squadMember) and squadMember.has_method("is_enemy"):
+				squadMember.detect_enemies()
+				shoot(squadMember, tick)
+			
 		var line_of_sight = tick.actor.detect_enemies()
 		if line_of_sight:
 			tick.actor.shoot()
 	
 	return OK
+	
+func shoot(enemy, tick):
+	if enemy.enemy_line_of_sight:
+		enemy.shoot()
+	
+func getPathToRunLocation(enemy, target, tick):
+	var spawnLocations = tick.blackboard.get("spawnLocations", tick.tree)
+		# Collecting target
+	
+	var waypoint # the place to run to
+	
+	if target: # if a target is available to run from
+		waypoint = calculateRunAwayLocation(tick, target, spawnLocations)
+			
+	else: # no target selected choose a random location
+		randomize()
+		var random_number = rand_range(0, spawnLocations.size())
+		waypoint = spawnLocations[random_number]
+			
+	# Only need to run once
+	# setting the new patrol as false by this point a new path has been created. Node and tree scope
+	tick.blackboard.set("run", false ,tick.tree, tick.actor)
+	
+	# gets the path it needs to new spawn location
+	enemy.get_world_path(waypoint)
 	
 func calculateRunAwayLocation(tick, target, spawnLocations):
 	var biggestDifference = null
