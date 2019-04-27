@@ -9,7 +9,7 @@ func _ready():
 func _on_HealthBoost_body_entered(body):
 	if body.has_method("heal"):
 		body.heal(HEALTH_BOOST)
-	queue_free()
+		queue_free()
 
 # When spawned where to be positioned
 func spawn(pos):

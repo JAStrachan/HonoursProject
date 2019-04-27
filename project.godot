@@ -16,6 +16,7 @@ _global_script_class_icons={
 [application]
 
 config/name="HonoursProject"
+run/main_scene="res://scenes/StartMenu.tscn"
 config/icon="res://icon.png"
 
 [autoload]

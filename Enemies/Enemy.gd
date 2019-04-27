@@ -25,10 +25,9 @@ var target
 var target_point_world = Vector2() # the next point in the path
 
 var threats = [] # the list of threats in range
-var friends = [] # the list of friends in range so we can avoid them
 var enemy_line_of_sight = false
 
-var Bullet = preload("res://Bullet/PlayerBullet.tscn")
+var Bullet = preload("res://Bullet/EnemyBullet.tscn")
 
 var velocity = Vector2()
 
@@ -63,20 +62,11 @@ func spawn(pos):
 
 func _process(delta):
 	update() # Used to add the drawing of the debugging behaviour
-
-func _on_debug_mode_changed():
-	pass
+	
 # The main loop that iterates at a fixed process
 func _physics_process(delta):
 	
-	if blackboard and behaviourTree:
-		var spawnLocations = tileMap.getSpawnLocations()
-		if target:
-			blackboard.set("target", target, behaviourTree, self)
-			blackboard.set("distance_from_threat", DISTANCE_FROM_THREAT, behaviourTree, self)
-			
-		blackboard.set("spawnLocations", spawnLocations, behaviourTree)
-		behaviourTree.tick(self, blackboard)
+	useBehaviourTrees()
 	
 	rotate(rotation * delta) # rotates the character independant of its movement
 	
@@ -85,6 +75,16 @@ func _physics_process(delta):
 		velocity = velocity.bounce(collision.normal)
 		if collision.collider.has_method("enemy_touch"):
 			collision.collider.enemy_touch()
+			
+func useBehaviourTrees():
+	if blackboard and behaviourTree:
+		var spawnLocations = tileMap.getSpawnLocations()
+		if target:
+			blackboard.set("target", target, behaviourTree, self)
+			blackboard.set("distance_from_threat", DISTANCE_FROM_THREAT, behaviourTree, self)
+			
+		blackboard.set("spawnLocations", spawnLocations, behaviourTree)
+		behaviourTree.tick(self, blackboard)
 
 # calculates the velcocity and the rotation (if we don't have line of sight, as then rotation gets overwritten)
 func move_to(world_position):
@@ -236,3 +236,6 @@ func heal(healthToAdd):
 func _on_ResetPatrol_timeout():
 	# Needs another patrol route set up, node and tree scope
 	blackboard.set("newPatrol", true, behaviourTree, self)
+	
+func is_enemy():
+	pass # a method that tells you that identity of the class you are checking

@@ -13,9 +13,14 @@ var spawnableLocations
 export (int) var Maximum_No_Of_Enemies = 15
 
 func _ready():
+	_on_ready()
 	spawnableLocations = $TileMap.getSpawnLocations()
 	spawnEnemies()
 	spawnHealth()
+	
+# A method for the children of Map.gd to insert their own values
+func _on_ready():
+	pass
 	
 func spawnEnemies():
 	var enemy = chooseEnemyToSpawn()
