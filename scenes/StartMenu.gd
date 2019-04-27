@@ -4,12 +4,12 @@ extends Control
 
 
 func _on_IndiviualAI_pressed():
-	pass # Replace with function body.
+	Global._deferred_goto_scene("res://scenes/Map.tscn")
 
 
 func _on_SquadAI_pressed():
-	pass # Replace with function body.
+	Global._deferred_goto_scene("res://scenes/SquadMap.tscn")
 
 
 func _on_Quit_pressed():
-	pass # Replace with function body.
+	get_tree().quit()

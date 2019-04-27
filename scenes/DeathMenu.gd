@@ -10,6 +10,6 @@ func _ready():
 
 
 func _on_Button_pressed():
-	Global.goto_scene("res://scenes/Map.tscn")
+	Global.goto_scene("res://scenes/StartMenu.tscn")
 	Global.reset_enemy_count()
 	Global.reset_score()
