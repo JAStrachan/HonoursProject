@@ -39,7 +39,7 @@ func _on_PeriodOfMemory_timeout():
 		update_squad_target(null)
 		
 func addToSquad(body):
-	if body.has_method("projectile_hit"):
+	if body.has_method("projectile_hit"): 
 		return
 	if squad.find(body) == -1:
 		if target:
@@ -71,14 +71,14 @@ func update_squad_target(body):
 	blackboard.set("target", target, behaviourTree, self)
 	
 	for member in squad:
-		if is_instance_valid(member):
+		if is_instance_valid(member) and member.has_method("is_enemy"):
 			member.target = target
 
 func targetClear():
 	# Is target clear from squad?
 	var targetClear = true
 	for member in squad:
-		if is_instance_valid(member):
+		if is_instance_valid(member) and member.has_method("is_enemy"):
 			if member.target:
 				targetClear = false
 	return targetClear

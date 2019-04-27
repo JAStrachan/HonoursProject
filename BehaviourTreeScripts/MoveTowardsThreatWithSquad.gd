@@ -5,7 +5,8 @@ func tick(tick):
 	var target = tick.blackboard.get("target", tick.tree, tick.actor)
 	for squadMember in squad:
 		if is_instance_valid(squadMember):
-			moveToAttack(squadMember, target, tick)
+			if not squadMember.has_method("projectile_hit"):
+				moveToAttack(squadMember, target, tick)
 	
 	moveToAttack(tick.actor, target, tick)
 	
@@ -18,12 +19,14 @@ func moveToAttack(enemy, target, tick):
 	enemy.get_world_path(target.position)
 	var distanceToTarget = enemy.position.distance_to(target.position)
 	
-	var line_of_sight = enemy.detect_enemies()
+	var line_of_sight = false
+	if target == enemy.target:
+		line_of_sight = enemy.detect_enemies()
 	if line_of_sight:
 		# the tick.actor is because the node scope is referencing the actor, in this case the commander
-		tick.blackboard.set("line_of_sight", line_of_sight, tick.tree, tick.actor)
+		tick.blackboard.set("line_of_sight", line_of_sight, tick.tree, enemy)
 	else:
-		tick.blackboard.set("line_of_sight", line_of_sight, tick.tree, tick.actor)
+		tick.blackboard.set("line_of_sight", line_of_sight, tick.tree, enemy)
 		
 	if distanceToTarget > DISTANCE_FROM_THREAT + 10 or not line_of_sight:
 		enemy.moving_through_path() #goes to chase state

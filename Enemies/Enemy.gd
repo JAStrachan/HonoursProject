@@ -236,3 +236,6 @@ func heal(healthToAdd):
 func _on_ResetPatrol_timeout():
 	# Needs another patrol route set up, node and tree scope
 	blackboard.set("newPatrol", true, behaviourTree, self)
+	
+func is_enemy():
+	pass # a method that tells you that identity of the class you are checking

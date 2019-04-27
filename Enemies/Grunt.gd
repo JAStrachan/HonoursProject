@@ -4,14 +4,15 @@ func _ready():
 	Global.mediumEnemyCount += 1
 	
 func death():
+	if inSquad:
+		squadLeader._on_squad_members_death(self)
 	Global.update_enemy_death_count()
 	
 	target = null
 	blackboard.set("target", target, behaviourTree, self)
 	Global.mediumEnemyCount -= 1
 	emit_signal("enemy_death", score_to_add)
-	if inSquad:
-		squadLeader._on_squad_members_death(self)
+	
 	queue_free()
 	
 func grunt():

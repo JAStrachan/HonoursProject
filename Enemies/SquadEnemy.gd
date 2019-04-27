@@ -46,8 +46,8 @@ func _on_AreaDetection_body_entered(body):
 	if body.name == "Player": 
 		target = body
 		if inSquad:
-			# TODO add  protection
-			squadLeader.update_squad_target(target)
+			if is_instance_valid(squadLeader):
+				squadLeader.update_squad_target(target)
 		blackboard.set("target", target, behaviourTree, self)
 		
 	# So if the timer has started and the threat has entered the area of detection again stop the timer

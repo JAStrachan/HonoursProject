@@ -27,8 +27,9 @@ func tick(tick):
 	var spotToMoveTo = tick.actor.calculateFollowPosition()
 	
 	for squadMember in squad:
-		squadMember.get_world_path(spotToMoveTo)
-		squadMember.moving_through_path()
+		if is_instance_valid(squadMember):
+			squadMember.get_world_path(spotToMoveTo)
+			squadMember.moving_through_path()
 	
 	tick.actor.detection_area_colour = Color(.867, .91, .247, 0.1) # yellow
 	
