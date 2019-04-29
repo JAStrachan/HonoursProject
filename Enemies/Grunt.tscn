@@ -5,4 +5,6 @@
 
 [node name="Grunt" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
+vision_distance = 200
+lowHealthPercentage = 0.2
 

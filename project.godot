@@ -29,6 +29,9 @@ gdscript/warnings/unused_argument=false
 
 [display]
 
+window/size/borderless=true
+window/size/fullscreen=true
+window/size/always_on_top=true
 mouse_cursor/custom_image="res://assets/Cursor-1.png.png"
 
 [editor_plugins]

@@ -5,9 +5,9 @@ func _ready():
 	
 func death():
 	if inSquad:
-		squadLeader._on_squad_members_death(self)
+		if squadLeader.has_method("_on_squad_members_death"):
+			squadLeader._on_squad_members_death(self)
 	Global.update_enemy_death_count()
-	
 	target = null
 	blackboard.set("target", target, behaviourTree, self)
 	emit_signal("enemy_death", score_to_add)

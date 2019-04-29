@@ -11,6 +11,10 @@ radius = 9.44444
 script = ExtResource( 2 )
 SPEED = 180.0
 DISTANCE_FROM_THREAT = 0
+health = 50
+totalHealth = 50
+vision_distance = 200
+score_to_add = 10
 lowHealthPercentage = 0.0
 behaviourTreePath = "/root/Map/SmallEnemyTree"
 

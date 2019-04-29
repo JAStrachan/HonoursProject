@@ -46,7 +46,7 @@ func _on_AreaDetection_body_entered(body):
 	if body.name == "Player": 
 		target = body
 		if inSquad:
-			if is_instance_valid(squadLeader):
+			if is_instance_valid(squadLeader) and squadLeader.has_method("update_squad_target"):
 				squadLeader.update_squad_target(target)
 		blackboard.set("target", target, behaviourTree, self)
 		

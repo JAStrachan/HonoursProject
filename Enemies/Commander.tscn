@@ -5,12 +5,5 @@
 
 [node name="Commander" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
-SPEED = 150.0
-MASS = 10.0
-DISTANCE_FROM_THREAT = 100
-health = 100
-totalHealth = 100
-vision_distance = 230
-score_to_add = 20
 behaviourTreePath = "/root/Map/CommanderTree"
 

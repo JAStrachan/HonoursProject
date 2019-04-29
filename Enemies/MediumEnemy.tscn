@@ -6,4 +6,5 @@
 [node name="MediumEnemy" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 vision_distance = 350
+lowHealthPercentage = 0.2
 
