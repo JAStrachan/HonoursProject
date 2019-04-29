@@ -10,7 +10,9 @@ var smallEnemyCount = 0
 var mediumEnemyCount = 0
 var current_scene = null
 
-var debug_mode = false
+var debug_mode = false 
+# Is used to tell enemies to change to debug mode. Enemy checks this. 
+# Player sets it to true when it recieves the input
 
 signal score_changed
 

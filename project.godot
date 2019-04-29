@@ -27,6 +27,10 @@ Global="*res://scripts/Global.gd"
 
 gdscript/warnings/unused_argument=false
 
+[display]
+
+mouse_cursor/custom_image="res://assets/Cursor-1.png.png"
+
 [editor_plugins]
 
 enabled=PoolStringArray( "godot-behavior-tree-plugin" )

@@ -28,7 +28,7 @@ func spawnEnemies():
 		return
 
 	spawn(enemy, 0)
-	$SpawnTimer.start()
+	$EnemySpawnTimer.start()
 	
 func spawnHealth():
 	var healthBoost = HealthBoost.instance()
