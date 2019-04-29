@@ -118,12 +118,15 @@ func isLocationClear(location: Vector2, listOfObjectPositions):
 # The list of objects that block the enemy spawning and their positions
 func getListOfObjectPositions():
 	var enemies = get_tree().get_nodes_in_group("enemies")
+	var healthBoosts = get_tree().get_nodes_in_group("HealthBoost")
 	
-	var listOfObjctPositions = Array()
+	var listOfObjectPositions = Array()
 	for index in range(0,enemies.size()):
-		listOfObjctPositions.append(enemies[index].position) 
-	listOfObjctPositions.append($Player.position)
-	return listOfObjctPositions
+		listOfObjectPositions.append(enemies[index].position) 
+	for index in range(0,healthBoosts.size()):
+		listOfObjectPositions.append(healthBoosts[index].position) 
+	listOfObjectPositions.append($Player.position)
+	return listOfObjectPositions
 
 # On this timeout spawn a new enemy if the total number of enemies doesn't exceed the maximum
 func _on_SpawnTimer_timeout():

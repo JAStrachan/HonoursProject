@@ -22,6 +22,7 @@ onready var springarm = $'Pivot'
 
 func _ready():
 	can_shoot = true
+	emit_signal('health_changed', health)
 	score = 0
 	
 # Basic movement taken and adapted from tutorial at http://docs.godotengine.org/en/3.0/tutorials/2d/2d_movement.html
@@ -45,11 +46,14 @@ func get_input(delta):
 			Global.debug_mode = false
 		else:
 			Global.debug_mode = true
+			
+	if Input.is_action_just_pressed("Quit"):
+		get_tree().quit()
 	# normalised the velocity otherwise going diagonal would be faster
 	velocity = velocity.normalized() * speed
 	
 	rotate(rotation * delta) # rotates the character independant of its movement
-	springarm.rotate(rotation * delta) # rotates the camera so you always see a little in front of you
+	#springarm.rotate(rotation * delta) # rotates the camera so you always see a little in front of you
 
 	if Input.is_action_pressed('ui_shoot'):
 		shoot()

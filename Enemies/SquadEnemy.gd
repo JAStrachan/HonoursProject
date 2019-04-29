@@ -58,7 +58,7 @@ func _on_AreaDetection_body_entered(body):
 # For how long it can track a threat for once it is out of it's vision
 func _on_PeriodOfMemory_timeout():
 	if inSquad:
-		if not squadLeader.target:
+		if squadLeader.has_method("is_enemy") and not squadLeader.target:
 			target = null
 	else:
 		target = null

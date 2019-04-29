@@ -41,7 +41,7 @@ func _on_PeriodOfMemory_timeout():
 func addToSquad(body):
 	if body.has_method("projectile_hit"): 
 		return
-	if squad.find(body) == -1:
+	if squad.find(body) == -1: # the body is not within the squad
 		if target:
 			body.target = target
 		if squad.size() < maxSquadTotal: # If there isn't too many already
@@ -86,7 +86,8 @@ func targetClear():
 func death():
 	for member in squad:
 		if is_instance_valid(member) and member.has_method("is_enemy"):
-			member.squadDisbanded()
+			if not member.has_method("update_squad_target"): # if it is commander dont go further
+				member.squadDisbanded()
 			
 	Global.update_enemy_death_count()
 	
