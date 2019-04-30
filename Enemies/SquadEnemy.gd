@@ -67,3 +67,17 @@ func _on_PeriodOfMemory_timeout():
 func squadDisbanded():
 	inSquad = false
 	squadLeader = null
+	
+func death():
+	deathCount() # called in child clases to update number of enemies by type in play
+	if inSquad:
+		if squadLeader.has_method("_on_squad_members_death"):
+			squadLeader._on_squad_members_death(self)
+	Global.update_enemy_death_count()
+	
+	target = null
+	blackboard.set("target", target, behaviourTree, self)
+
+	emit_signal("enemy_death", score_to_add)
+	
+	queue_free()

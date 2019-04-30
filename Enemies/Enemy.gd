@@ -24,14 +24,13 @@ var path = []
 var target
 var target_point_world = Vector2() # the next point in the path
 
-var threats = [] # the list of threats in range
 var enemy_line_of_sight = false
 
 var Bullet = preload("res://Bullet/EnemyBullet.tscn")
 
 var velocity = Vector2()
 
-signal enemy_death
+signal enemy_death # emitted in the child classes who all specific death functions
 
 onready var tileMap = get_parent().get_node('/root/Map/TileMap')
 
@@ -222,6 +221,15 @@ func bullet_hit(bullet_damage):
 			blackboard.set("run", true, behaviourTree, self)
 
 func death():
+	Global.update_enemy_death_count()
+	deathCount() # is used by child classes to tell Global how much of each type of enemy is left
+	target = null
+	blackboard.set("target", target, behaviourTree, self)
+	emit_signal("enemy_death", score_to_add)
+	
+	queue_free()
+	
+func deathCount():
 	# Is overridden in child classes
 	pass
 	

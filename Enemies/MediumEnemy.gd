@@ -4,14 +4,7 @@ extends "res://Enemies/Enemy.gd"
 
 func _ready():
 	Global.mediumEnemyCount += 1
-	
-func death():
-	Global.update_enemy_death_count()
-	
-	target = null
-	blackboard.set("target", target, behaviourTree, self)
+
+func deathCount():
+	# Is overridden in child classes
 	Global.mediumEnemyCount -= 1
-	emit_signal("enemy_death", score_to_add)
-	
-	queue_free()
-	
