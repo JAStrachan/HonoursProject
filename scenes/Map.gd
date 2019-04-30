@@ -28,7 +28,7 @@ func spawnEnemies():
 		return
 
 	spawn(enemy, 0)
-	$SpawnTimer.start()
+	$EnemySpawnTimer.start()
 	
 func spawnHealth():
 	var healthBoost = HealthBoost.instance()
@@ -36,6 +36,7 @@ func spawnHealth():
 	spawn(healthBoost, -3)
 	$HealthBoostTimer.start()
 	
+# Will Spawn an object,  trys modifer will determine how many trys it will take depending on number of spawn locations
 func spawn(objectToSpawn, trysModifier):
 	var spawned = false
 	var noOfTrys = 0
@@ -54,6 +55,7 @@ func spawn(objectToSpawn, trysModifier):
 			
 			spawned = true
 	
+# Chooses what enemy to spawn depending on ratios of enemies alive
 func chooseEnemyToSpawn():
 	var enemy
 	
@@ -63,8 +65,8 @@ func chooseEnemyToSpawn():
 	var totalEnemyCount = largeEnemyCount + mediumEnemyCount + smallEnemyCount
 	
 	var ratioLarge = calculate_ratio(totalEnemyCount, largeEnemyCount)
-	var ratioMedium = calculate_ratio(totalEnemyCount, mediumEnemyCount)
 	var ratioSmall = calculate_ratio(totalEnemyCount, smallEnemyCount)
+	# I do not care so much about the ratio of the medium enemies
 	
 	# Calculating ratios to make sure the player isn't overwhelemed with large enemies
 	
@@ -118,12 +120,15 @@ func isLocationClear(location: Vector2, listOfObjectPositions):
 # The list of objects that block the enemy spawning and their positions
 func getListOfObjectPositions():
 	var enemies = get_tree().get_nodes_in_group("enemies")
+	var healthBoosts = get_tree().get_nodes_in_group("HealthBoost")
 	
-	var listOfObjctPositions = Array()
+	var listOfObjectPositions = Array()
 	for index in range(0,enemies.size()):
-		listOfObjctPositions.append(enemies[index].position) 
-	listOfObjctPositions.append($Player.position)
-	return listOfObjctPositions
+		listOfObjectPositions.append(enemies[index].position) 
+	for index in range(0,healthBoosts.size()):
+		listOfObjectPositions.append(healthBoosts[index].position) 
+	listOfObjectPositions.append($Player.position)
+	return listOfObjectPositions
 
 # On this timeout spawn a new enemy if the total number of enemies doesn't exceed the maximum
 func _on_SpawnTimer_timeout():

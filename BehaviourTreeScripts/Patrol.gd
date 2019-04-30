@@ -3,6 +3,7 @@ extends "res://addons/godot-behavior-tree-plugin/action.gd"
 func tick(tick):	
 	var newPatrol = tick.blackboard.get("newPatrol", tick.tree, tick.actor)
 	
+	# Making sure it calls for a new patrol when the old one is finished
 	if newPatrol:
 		var spawnLocations = tick.blackboard.get("spawnLocations", tick.tree)
 		# If a new patrol route (ie to new spawn location then)

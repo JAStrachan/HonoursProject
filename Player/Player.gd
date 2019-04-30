@@ -10,7 +10,7 @@ var score
 
 signal death
 signal health_changed
-signal score_changed
+signal score_changed # Global, the autoload script I have links up to this
 
 
 var velocity = Vector2()
@@ -22,6 +22,7 @@ onready var springarm = $'Pivot'
 
 func _ready():
 	can_shoot = true
+	emit_signal('health_changed', health)
 	score = 0
 	
 # Basic movement taken and adapted from tutorial at http://docs.godotengine.org/en/3.0/tutorials/2d/2d_movement.html
@@ -45,6 +46,9 @@ func get_input(delta):
 			Global.debug_mode = false
 		else:
 			Global.debug_mode = true
+			
+	if Input.is_action_just_pressed("Quit"):
+		get_tree().quit()
 	# normalised the velocity otherwise going diagonal would be faster
 	velocity = velocity.normalized() * speed
 	
@@ -57,17 +61,6 @@ func get_input(delta):
 	
 func _physics_process(delta):
 	get_input(delta)
-#	var collision = move_and_collide(velocity * delta)
-#	if collision:
-#		velocity = velocity.slide(collision.normal)
-#		# For collision with enemies that are still as the collision dectection only works when something is moving
-#		if collision.collider.has_method("hit_player"):
-#			velocity = velocity.bounce(collision.normal)
-#			enemy_touch()
-#		else:
-#			# Have this so player's will bounce off enemies but slide along walls
-#			pass
-	#var collision = 
 	move_and_slide(velocity)
 
 func _on_time_since_last_shot_timeout():
@@ -103,8 +96,6 @@ func hit(damage):
 		if not Global.debug_mode: # If not debugging we can take damage
 			health = health - damage
 		emit_signal('health_changed', health)
-
-
 		
 func death():
 	emit_signal("death")

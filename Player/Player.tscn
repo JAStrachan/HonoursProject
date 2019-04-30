@@ -8,6 +8,8 @@ radius = 12.3688
 
 [node name="Player" type="KinematicBody2D"]
 script = ExtResource( 1 )
+health = 150
+max_health = 200
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( -0.429276, 0.643921 )
@@ -27,5 +29,7 @@ position = Vector2( 48, 0 )
 [node name="Camera2D" type="Camera2D" parent="Pivot/CameraOffset"]
 position = Vector2( 0, 0.214645 )
 current = true
+smoothing_enabled = true
+editor_draw_drag_margin = true
 
 [connection signal="timeout" from="time_since_last_shot" to="." method="_on_time_since_last_shot_timeout"]

@@ -17,29 +17,36 @@ export (String) var behaviourTreePath = '/root/Map/MediumEnemyTree'
 
 var raycast_hit_pos = [] # the positions the raycasts have hit
 
+# The detection_area_colour shows the detection range of the enemy, 
+# it also changes colour depending what state the enemy is in
 var detection_area_colour = Color(.867, .91, .247, 0.1)
+# The colour of the lines drawn when in debug mode for raycasts
 var raycast_debug_colour = Color(1,0,0,1)
 
+# The series of points to reach their target
 var path = []
+# The Target they are trying to reach
 var target
 var target_point_world = Vector2() # the next point in the path
 
-var threats = [] # the list of threats in range
+# Used to decide if they can fire on the target
 var enemy_line_of_sight = false
 
 var Bullet = preload("res://Bullet/EnemyBullet.tscn")
 
 var velocity = Vector2()
 
-signal enemy_death
+signal enemy_death # emitted in the child classes who all specific death functions
 
 onready var tileMap = get_parent().get_node('/root/Map/TileMap')
 
 onready var blackboard = get_node("/root/Map/Blackboard")
+# Having an exported variable that is the path allows us to change the tree they use easily
 onready var behaviourTree = get_node(behaviourTreePath)
 
 func _ready():
 	# Raycasting a visibiltity /area of dectection was taken from http://kidscancode.org/blog/2018/03/godot3_visibility_raycasts/
+	# THis is for creating a collision shape the same size as what ever "vision_distance" you define it as
 	var shape = CircleShape2D.new()
 	shape.radius = vision_distance
 	$AreaDetection/CollisionShape2D.shape = shape
@@ -47,25 +54,27 @@ func _ready():
 	# So we can collect information about it without a direct reference to the exact node it is
 	add_to_group("enemies")
 	
+	# Returns error codes if already connected
 	$AreaDetection.connect("body_entered", self, "_on_AreaDetection_body_entered")
 	$AreaDetection.connect("body_exited", self, "_on_AreaDetection_body_exited")
 	
 	# Sets it so a new patrol is wanted when spawned
 	blackboard.set("newPatrol", true, behaviourTree, self)
 	
-	Global.connect("debug_mode_changed",self, "_on_debug_mode_changed")
-	
 # For random spawning, gives correct position on map
 func spawn(pos):
 	position = pos
 	
-
 func _process(delta):
 	update() # Used to add the drawing of the debugging behaviour
 	
 # The main loop that iterates at a fixed process
 func _physics_process(delta):
 	
+	# Due to the complications of Godot inheritance we cannot overwrite the
+	# _physic_process, _ready or _process and call the parents code anytime we want,
+	# the parents code always runs first. But we can call a method we can overwrite first
+	# meaning we can put any behaviour specific to the child class in this method
 	useBehaviourTrees()
 	
 	rotate(rotation * delta) # rotates the character independant of its movement
@@ -224,6 +233,15 @@ func bullet_hit(bullet_damage):
 			blackboard.set("run", true, behaviourTree, self)
 
 func death():
+	Global.update_enemy_death_count()
+	deathCount() # is used by child classes to tell Global how much of each type of enemy is left
+	target = null
+	blackboard.set("target", target, behaviourTree, self)
+	emit_signal("enemy_death", score_to_add)
+	
+	queue_free()
+	
+func deathCount():
 	# Is overridden in child classes
 	pass
 	
@@ -238,4 +256,4 @@ func _on_ResetPatrol_timeout():
 	blackboard.set("newPatrol", true, behaviourTree, self)
 	
 func is_enemy():
-	pass # a method that tells you that identity of the class you are checking
+	pass # a method that tells you that identity of the class you are checking for duck typing

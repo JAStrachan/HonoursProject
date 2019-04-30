@@ -28,8 +28,9 @@ func tick(tick):
 	if target:
 		for squadMember in squad:
 			if is_instance_valid(squadMember) and squadMember.has_method("is_enemy"):
-				squadMember.detect_enemies()
-				shoot(squadMember, tick)
+				if squadMember.target:
+					squadMember.detect_enemies()
+					shoot(squadMember, tick)
 			
 		var line_of_sight = tick.actor.detect_enemies()
 		if line_of_sight:

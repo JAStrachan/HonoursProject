@@ -2,18 +2,9 @@ extends "res://Enemies/SquadEnemy.gd"
 
 func _ready():
 	Global.mediumEnemyCount += 1
-	
-func death():
-	if inSquad:
-		squadLeader._on_squad_members_death(self)
-	Global.update_enemy_death_count()
-	
-	target = null
-	blackboard.set("target", target, behaviourTree, self)
+
+func deathCount():
 	Global.mediumEnemyCount -= 1
-	emit_signal("enemy_death", score_to_add)
-	
-	queue_free()
 	
 func grunt():
 	pass

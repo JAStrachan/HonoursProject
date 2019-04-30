@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://powerups/HealthBoost.gd" type="Script" id=1]
-[ext_resource path="res://powerups/Heart.png" type="Texture" id=2]
+[ext_resource path="res://scenes/powerups/HealthBoost.gd" type="Script" id=1]
+[ext_resource path="res://scenes/powerups/Heart.png" type="Texture" id=2]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 17.0537
