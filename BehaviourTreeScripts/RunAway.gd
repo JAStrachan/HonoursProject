@@ -8,11 +8,10 @@ func tick(tick):
 	var run  =  tick.blackboard.get("run", tick.tree, tick.actor)
 	var target = tick.blackboard.get("target", tick.tree, tick.actor)
 	
+	# Making sure it only gets one run away position per the trigger for running
 	if run:
 		var spawnLocations = tick.blackboard.get("spawnLocations", tick.tree)
 		# Collecting target
-
-		
 		var waypoint # the place to run to
 		
 		if target: # if a target is available to run from

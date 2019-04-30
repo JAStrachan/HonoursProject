@@ -26,8 +26,8 @@ wait_time = 0.2
 [node name="CameraOffset" type="Position2D" parent="Pivot"]
 position = Vector2( 48, 0 )
 
-[node name="Camera2D" type="Camera2D" parent="Pivot"]
-position = Vector2( 48, 0.214645 )
+[node name="Camera2D" type="Camera2D" parent="Pivot/CameraOffset"]
+position = Vector2( 0, 0.214645 )
 current = true
 smoothing_enabled = true
 editor_draw_drag_margin = true

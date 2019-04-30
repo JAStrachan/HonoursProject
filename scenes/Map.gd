@@ -36,6 +36,7 @@ func spawnHealth():
 	spawn(healthBoost, -3)
 	$HealthBoostTimer.start()
 	
+# Will Spawn an object,  trys modifer will determine how many trys it will take depending on number of spawn locations
 func spawn(objectToSpawn, trysModifier):
 	var spawned = false
 	var noOfTrys = 0
@@ -54,6 +55,7 @@ func spawn(objectToSpawn, trysModifier):
 			
 			spawned = true
 	
+# Chooses what enemy to spawn depending on ratios of enemies alive
 func chooseEnemyToSpawn():
 	var enemy
 	
@@ -63,8 +65,8 @@ func chooseEnemyToSpawn():
 	var totalEnemyCount = largeEnemyCount + mediumEnemyCount + smallEnemyCount
 	
 	var ratioLarge = calculate_ratio(totalEnemyCount, largeEnemyCount)
-	var ratioMedium = calculate_ratio(totalEnemyCount, mediumEnemyCount)
 	var ratioSmall = calculate_ratio(totalEnemyCount, smallEnemyCount)
+	# I do not care so much about the ratio of the medium enemies
 	
 	# Calculating ratios to make sure the player isn't overwhelemed with large enemies
 	

@@ -8,7 +8,7 @@ func _ready():
 	score_label.text = str(Global.score)
 	noOfEnemies_label.text = str(Global.no_of_dead_enemies)
 
-
+# When restart button is pressed
 func _on_Button_pressed():
 	Global.goto_scene("res://scenes/StartMenu.tscn")
 	Global.reset_enemy_count()

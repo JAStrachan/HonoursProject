@@ -10,7 +10,7 @@ var score
 
 signal death
 signal health_changed
-signal score_changed
+signal score_changed # Global, the autoload script I have links up to this
 
 
 var velocity = Vector2()
@@ -53,7 +53,7 @@ func get_input(delta):
 	velocity = velocity.normalized() * speed
 	
 	rotate(rotation * delta) # rotates the character independant of its movement
-	#springarm.rotate(rotation * delta) # rotates the camera so you always see a little in front of you
+	springarm.rotate(rotation * delta) # rotates the camera so you always see a little in front of you
 
 	if Input.is_action_pressed('ui_shoot'):
 		shoot()

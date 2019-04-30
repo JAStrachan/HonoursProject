@@ -27,7 +27,7 @@ func tick(tick):
 	var spotToMoveTo = tick.actor.calculateFollowPosition()
 	
 	for squadMember in squad:
-		if is_instance_valid(squadMember) and squadMember.has_method("is_method"):
+		if is_instance_valid(squadMember) and squadMember.has_method("is_enemy"):
 			squadMember.get_world_path(spotToMoveTo)
 			squadMember.moving_through_path()
 	
