@@ -53,8 +53,6 @@ func _ready():
 	# Sets it so a new patrol is wanted when spawned
 	blackboard.set("newPatrol", true, behaviourTree, self)
 	
-	Global.connect("debug_mode_changed",self, "_on_debug_mode_changed")
-	
 # For random spawning, gives correct position on map
 func spawn(pos):
 	position = pos
